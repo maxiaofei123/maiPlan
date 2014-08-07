@@ -9,6 +9,8 @@
 #import "M_examViewController.h"
 #import "Exam_testViewController.h"
 #import "M_homeViewController.h"
+#import "M_regViewController.h"
+
 
 @interface M_examViewController ()
 {
@@ -90,6 +92,7 @@
     [select1 setImage:[UIImage imageNamed:@"exam_circle1.png"] forState:UIControlStateSelected];
     select1.tag = 3;
     [select1 addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
+    select1.selected = YES;
     [self.view addSubview:select1];
     
     select2 = [[UIButton alloc] initWithFrame:CGRectMake(100, 240, 20, 20)];
@@ -130,6 +133,15 @@
         zhuce.tag = 8;
         [zhuce addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:zhuce];
+        
+        UIButton *lost = [UIButton buttonWithType:0];
+        [lost setFrame:CGRectMake((self.view.frame.size.width-150)/2, self.view.frame.size.height-44-30, 150, 20)];
+        [lost setTitle:@"忘记密码" forState:UIControlStateNormal];
+        [lost setBackgroundColor:[UIColor clearColor]];
+        lost.titleLabel.font = [UIFont systemFontOfSize:13.];
+      //  [lost addTarget:self action:@selector(lost) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:lost];
+
         
         
     }
@@ -180,6 +192,10 @@
         }
             break;
         case 2:
+        {
+            UIActionSheet *sheet = [[UIActionSheet alloc]initWithTitle:@"分享" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"分享到微信好友",@"分享到朋友圈", nil];
+            [sheet showInView:self.view];
+        }
             
             break;
         case 3:
@@ -205,6 +221,9 @@
             break;
             
         case 6:
+            {
+                
+            }
             
             break;
         case 7:
@@ -212,6 +231,14 @@
             _testView = [[Exam_testViewController alloc] init];
             [self.navigationController pushViewController:_testView animated:NO];
            
+            break;
+        case 8:
+            {
+                M_regViewController * reg = [[M_regViewController alloc] init];
+                [self.navigationController pushViewController:reg animated:NO];
+        
+            }
+            
             break;
             
             
@@ -266,6 +293,14 @@
     contentView.frame = CGRectMake(contentView.bounds.origin.x,  contentView.bounds.origin.y,  contentView.bounds.size.width, contentView.bounds.size.height + self.tabBarController.tabBar.frame.size.height);
     self.tabBarController.tabBar.hidden = YES;
     
+}
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        [M_public sendLinkContent:0];
+    }else if (buttonIndex == 1){
+        [M_public sendLinkContent:1];
+    }
 }
 
 - (void)didReceiveMemoryWarning

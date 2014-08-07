@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface M_selfViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>
+@interface M_selfViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIImagePickerControllerDelegate,UIActionSheetDelegate>
 
 @property (strong ,nonatomic)UITableView * tableView;
 @end

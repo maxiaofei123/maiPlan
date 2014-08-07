@@ -8,6 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		D2394923198623C500975C27 /* self_setPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2394922198623C500975C27 /* self_setPageViewController.m */; };
+		D239492519877E9500975C27 /* Default1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D239492419877E9500975C27 /* Default1@2x.png */; };
+		D2394934198F4B5300975C27 /* public_head@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2394933198F4B5300975C27 /* public_head@2x.png */; };
+		D26816EE198F746000161A03 /* my_xiugai@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D26816ED198F746000161A03 /* my_xiugai@2x.png */; };
+		D26816F0198F756B00161A03 /* my_baidi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D26816EF198F756B00161A03 /* my_baidi@2x.png */; };
+		D26816F6198F775200161A03 /* M_regViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D26816F5198F775200161A03 /* M_regViewController.m */; };
+		D26816FE1990B3E200161A03 /* M_public.m in Sources */ = {isa = PBXBuildFile; fileRef = D26816FD1990B3E200161A03 /* M_public.m */; };
+		D26817031990B4C500161A03 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D26817001990B4C500161A03 /* libWeChatSDK.a */; };
 		D2855938197BCBC800F49779 /* exam@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2855937197BCBC800F49779 /* exam@2x.png */; };
 		D285593A197BCC3600F49779 /* home@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2855939197BCC3600F49779 /* home@2x.png */; };
 		D285593C197BCCB300F49779 /* topR@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D285593B197BCCB300F49779 /* topR@2x.png */; };
@@ -21,7 +28,6 @@
 		D2855951197C1DE200F49779 /* liuyanban@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2855950197C1DE200F49779 /* liuyanban@2x.png */; };
 		D2855958197CA5DD00F49779 /* home_back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2855957197CA5DD00F49779 /* home_back@2x.png */; };
 		D285595D197CA8FD00F49779 /* my_baikuang@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2855959197CA8FD00F49779 /* my_baikuang@2x.png */; };
-		D285595E197CA8FD00F49779 /* my_change@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D285595A197CA8FD00F49779 /* my_change@2x.png */; };
 		D285595F197CA8FD00F49779 /* my_quan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D285595B197CA8FD00F49779 /* my_quan@2x.png */; };
 		D2855960197CA8FD00F49779 /* home_back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D285595C197CA8FD00F49779 /* home_back@2x.png */; };
 		D2B491DB197BC1220080D4AC /* start_Bt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2B491DA197BC1220080D4AC /* start_Bt@2x.png */; };
@@ -43,9 +49,6 @@
 		D2B64718197A7EB20074F36B /* M_selfViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B64717197A7EB20074F36B /* M_selfViewController.m */; };
 		D2B6471B197A7EE50074F36B /* M_messageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B6471A197A7EE50074F36B /* M_messageViewController.m */; };
 		D2B6471E197A7EF20074F36B /* M_setViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B6471D197A7EF20074F36B /* M_setViewController.m */; };
-		D2B6472B197A90CF0074F36B /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = D2B64729197A90CF0074F36B /* Default.png */; };
-		D2B64732197A93EB0074F36B /* Default960@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2B64731197A93EB0074F36B /* Default960@2x.png */; };
-		D2B64734197A94EE0074F36B /* Default1136@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2B64733197A94EE0074F36B /* Default1136@2x.png */; };
 		D2B64758197AC5E70074F36B /* liuyan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2B64749197AC5E70074F36B /* liuyan@2x.png */; };
 		D2B6475A197AC5E70074F36B /* my@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2B6474B197AC5E70074F36B /* my@2x.png */; };
 		D2B6475D197AC5E70074F36B /* set@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2B6474E197AC5E70074F36B /* set@2x.png */; };
@@ -100,6 +103,17 @@
 /* Begin PBXFileReference section */
 		D2394921198623C500975C27 /* self_setPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = self_setPageViewController.h; sourceTree = "<group>"; };
 		D2394922198623C500975C27 /* self_setPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = self_setPageViewController.m; sourceTree = "<group>"; };
+		D239492419877E9500975C27 /* Default1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default1@2x.png"; sourceTree = "<group>"; };
+		D2394933198F4B5300975C27 /* public_head@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "public_head@2x.png"; sourceTree = "<group>"; };
+		D26816ED198F746000161A03 /* my_xiugai@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "my_xiugai@2x.png"; sourceTree = "<group>"; };
+		D26816EF198F756B00161A03 /* my_baidi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "my_baidi@2x.png"; sourceTree = "<group>"; };
+		D26816F4198F775200161A03 /* M_regViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M_regViewController.h; sourceTree = "<group>"; };
+		D26816F5198F775200161A03 /* M_regViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M_regViewController.m; sourceTree = "<group>"; };
+		D26816FC1990B3E200161A03 /* M_public.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M_public.h; sourceTree = "<group>"; };
+		D26816FD1990B3E200161A03 /* M_public.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M_public.m; sourceTree = "<group>"; };
+		D26817001990B4C500161A03 /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
+		D26817011990B4C500161A03 /* WXApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
+		D26817021990B4C500161A03 /* WXApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
 		D2855937197BCBC800F49779 /* exam@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exam@2x.png"; sourceTree = "<group>"; };
 		D2855939197BCC3600F49779 /* home@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home@2x.png"; sourceTree = "<group>"; };
 		D285593B197BCCB300F49779 /* topR@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "topR@2x.png"; path = "主页/topR@2x.png"; sourceTree = "<group>"; };
@@ -113,7 +127,6 @@
 		D2855950197C1DE200F49779 /* liuyanban@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "liuyanban@2x.png"; sourceTree = "<group>"; };
 		D2855957197CA5DD00F49779 /* home_back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home_back@2x.png"; sourceTree = "<group>"; };
 		D2855959197CA8FD00F49779 /* my_baikuang@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "my_baikuang@2x.png"; sourceTree = "<group>"; };
-		D285595A197CA8FD00F49779 /* my_change@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "my_change@2x.png"; sourceTree = "<group>"; };
 		D285595B197CA8FD00F49779 /* my_quan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "my_quan@2x.png"; sourceTree = "<group>"; };
 		D285595C197CA8FD00F49779 /* home_back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home_back@2x.png"; sourceTree = "<group>"; };
 		D2B491DA197BC1220080D4AC /* start_Bt@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "start_Bt@2x.png"; sourceTree = "<group>"; };
@@ -144,9 +157,6 @@
 		D2B6471A197A7EE50074F36B /* M_messageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = M_messageViewController.m; path = ../M_messageViewController.m; sourceTree = "<group>"; };
 		D2B6471C197A7EF20074F36B /* M_setViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M_setViewController.h; sourceTree = "<group>"; };
 		D2B6471D197A7EF20074F36B /* M_setViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M_setViewController.m; sourceTree = "<group>"; };
-		D2B64729197A90CF0074F36B /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		D2B64731197A93EB0074F36B /* Default960@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default960@2x.png"; sourceTree = "<group>"; };
-		D2B64733197A94EE0074F36B /* Default1136@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default1136@2x.png"; sourceTree = "<group>"; };
 		D2B64749197AC5E70074F36B /* liuyan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "liuyan@2x.png"; sourceTree = "<group>"; };
 		D2B6474B197AC5E70074F36B /* my@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "my@2x.png"; sourceTree = "<group>"; };
 		D2B6474E197AC5E70074F36B /* set@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "set@2x.png"; sourceTree = "<group>"; };
@@ -199,6 +209,7 @@
 			files = (
 				D2B646E2197A7CE30074F36B /* CoreGraphics.framework in Frameworks */,
 				D2B646E4197A7CE30074F36B /* UIKit.framework in Frameworks */,
+				D26817031990B4C500161A03 /* libWeChatSDK.a in Frameworks */,
 				D2B646E0197A7CE30074F36B /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -216,7 +227,45 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		D285593F197BD00000F49779 /* liuyan */ = {
+		D21FE931198F6D38008C2045 /* 注册 */ = {
+			isa = PBXGroup;
+			children = (
+				D26816F4198F775200161A03 /* M_regViewController.h */,
+				D26816F5198F775200161A03 /* M_regViewController.m */,
+			);
+			path = "注册";
+			sourceTree = "<group>";
+		};
+		D239492C198A339900975C27 /* 分享 */ = {
+			isa = PBXGroup;
+			children = (
+				D26816FC1990B3E200161A03 /* M_public.h */,
+				D26816FD1990B3E200161A03 /* M_public.m */,
+			);
+			name = "分享";
+			path = fenxiang;
+			sourceTree = "<group>";
+		};
+		D26816FF1990B4C500161A03 /* WeiXin */ = {
+			isa = PBXGroup;
+			children = (
+				D26817001990B4C500161A03 /* libWeChatSDK.a */,
+				D26817011990B4C500161A03 /* WXApi.h */,
+				D26817021990B4C500161A03 /* WXApiObject.h */,
+			);
+			name = WeiXin;
+			path = ../WeiXin;
+			sourceTree = "<group>";
+		};
+		D26817041990BC0400161A03 /* 第三方 */ = {
+			isa = PBXGroup;
+			children = (
+				D26816FF1990B4C500161A03 /* WeiXin */,
+			);
+			path = "第三方";
+			sourceTree = "<group>";
+		};
+		D285593F197BD00000F49779 /* 留言 */ = {
 			isa = PBXGroup;
 			children = (
 				D2855950197C1DE200F49779 /* liuyanban@2x.png */,
@@ -225,12 +274,14 @@
 				D2B64719197A7EE50074F36B /* M_messageViewController.h */,
 				D2B6471A197A7EE50074F36B /* M_messageViewController.m */,
 			);
+			name = "留言";
 			path = liuyan;
 			sourceTree = "<group>";
 		};
 		D2855954197C23DE00F49779 /* publicImage */ = {
 			isa = PBXGroup;
 			children = (
+				D2394933198F4B5300975C27 /* public_head@2x.png */,
 				D2B491DC197BC22D0080D4AC /* lanDi@2x.png */,
 				D285593D197BCDCA00F49779 /* hui_bg@2x.png */,
 				D2C9C307197CD01900925D14 /* public_home@2x.png */,
@@ -242,8 +293,9 @@
 		D2855955197C242B00F49779 /* mySelf */ = {
 			isa = PBXGroup;
 			children = (
+				D26816EF198F756B00161A03 /* my_baidi@2x.png */,
 				D2855959197CA8FD00F49779 /* my_baikuang@2x.png */,
-				D285595A197CA8FD00F49779 /* my_change@2x.png */,
+				D26816ED198F746000161A03 /* my_xiugai@2x.png */,
 				D285595B197CA8FD00F49779 /* my_quan@2x.png */,
 				D285595C197CA8FD00F49779 /* home_back@2x.png */,
 				D2B64716197A7EB20074F36B /* M_selfViewController.h */,
@@ -255,7 +307,7 @@
 			path = ..;
 			sourceTree = "<group>";
 		};
-		D2855956197C24D200F49779 /* exam */ = {
+		D2855956197C24D200F49779 /* 考试 */ = {
 			isa = PBXGroup;
 			children = (
 				D2C9C31E197E186E00925D14 /* images */,
@@ -266,16 +318,14 @@
 				D2C9C337197E557B00925D14 /* Exam_resultViewController.h */,
 				D2C9C338197E557B00925D14 /* Exam_resultViewController.m */,
 			);
-			name = exam;
+			name = "考试";
 			path = ..;
 			sourceTree = "<group>";
 		};
 		D2B491D7197BC1000080D4AC /* 引导页 */ = {
 			isa = PBXGroup;
 			children = (
-				D2B64731197A93EB0074F36B /* Default960@2x.png */,
-				D2B64733197A94EE0074F36B /* Default1136@2x.png */,
-				D2B64729197A90CF0074F36B /* Default.png */,
+				D239492419877E9500975C27 /* Default1@2x.png */,
 				D2B491DA197BC1220080D4AC /* start_Bt@2x.png */,
 				D2C9C31C197E17FE00925D14 /* start2@2x.png */,
 			);
@@ -285,6 +335,7 @@
 		D2B646D3197A7CE30074F36B = {
 			isa = PBXGroup;
 			children = (
+				D26817041990BC0400161A03 /* 第三方 */,
 				D2C9C3471981FE5000925D14 /* 120-120.png */,
 				D2855954197C23DE00F49779 /* publicImage */,
 				D2B491D7197BC1000080D4AC /* 引导页 */,
@@ -318,11 +369,13 @@
 		D2B646E5197A7CE30074F36B /* Mfeiji */ = {
 			isa = PBXGroup;
 			children = (
+				D21FE931198F6D38008C2045 /* 注册 */,
+				D239492C198A339900975C27 /* 分享 */,
 				D2C9C2F4197CC08300925D14 /* 设置 */,
 				D2855955197C242B00F49779 /* mySelf */,
 				D2B64741197AC5E70074F36B /* 主页 */,
-				D285593F197BD00000F49779 /* liuyan */,
-				D2855956197C24D200F49779 /* exam */,
+				D285593F197BD00000F49779 /* 留言 */,
+				D2855956197C24D200F49779 /* 考试 */,
 				D2B646EE197A7CE30074F36B /* AppDelegate.h */,
 				D2B646EF197A7CE30074F36B /* AppDelegate.m */,
 				D2B646F1197A7CE30074F36B /* Images.xcassets */,
@@ -519,7 +572,6 @@
 				D285595D197CA8FD00F49779 /* my_baikuang@2x.png in Resources */,
 				D2C9C2F8197CC43200925D14 /* set_di@2x.png in Resources */,
 				D2C9C301197CD00C00925D14 /* exam_circle@2x.png in Resources */,
-				D2B64732197A93EB0074F36B /* Default960@2x.png in Resources */,
 				D2B646EA197A7CE30074F36B /* InfoPlist.strings in Resources */,
 				D2855949197C1BD600F49779 /* home_3@2x.png in Resources */,
 				D2C9C32A197E188900925D14 /* test_next@2x.png in Resources */,
@@ -534,16 +586,16 @@
 				D2C9C346197F729B00925D14 /* switch_on@2x.png in Resources */,
 				D2C9C327197E188900925D14 /* test_left@2x.png in Resources */,
 				D2C9C310197CE6F200925D14 /* home_lan3@2x.png in Resources */,
-				D2B64734197A94EE0074F36B /* Default1136@2x.png in Resources */,
 				D2B6475D197AC5E70074F36B /* set@2x.png in Resources */,
-				D2B6472B197A90CF0074F36B /* Default.png in Resources */,
 				D2C9C334197E553B00925D14 /* result_paihang@2x.png in Resources */,
 				D2C9C336197E553B00925D14 /* result_tuichu@2x.png in Resources */,
 				D2855958197CA5DD00F49779 /* home_back@2x.png in Resources */,
 				D2C9C316197CE9A400925D14 /* home_plan@2x.png in Resources */,
 				D2C9C312197CE6F200925D14 /* home_lan2@2x.png in Resources */,
 				D2855944197BD00000F49779 /* liuyan_jianyi@2x.png in Resources */,
+				D26816F0198F756B00161A03 /* my_baidi@2x.png in Resources */,
 				D285593A197BCC3600F49779 /* home@2x.png in Resources */,
+				D26816EE198F746000161A03 /* my_xiugai@2x.png in Resources */,
 				D2C9C32B197E188900925D14 /* test_lan@2x.png in Resources */,
 				D2C9C308197CD01900925D14 /* exam_circle1@2x.png in Resources */,
 				D2B491DB197BC1220080D4AC /* start_Bt@2x.png in Resources */,
@@ -551,10 +603,12 @@
 				D2B491DD197BC22D0080D4AC /* lanDi@2x.png in Resources */,
 				D2C9C300197CD00C00925D14 /* exam_pwd@2x.png in Resources */,
 				D2C9C30F197CE6F200925D14 /* home_lan1@2x.png in Resources */,
+				D2394934198F4B5300975C27 /* public_head@2x.png in Resources */,
 				D2C9C303197CD00C00925D14 /* exam_woyaozhuce@2x.png in Resources */,
 				D2C9C340197F694000925D14 /* switch_bg@2x.png in Resources */,
 				D2C9C33F197F694000925D14 /* switch_button@2x.png in Resources */,
 				D2B64758197AC5E70074F36B /* liuyan@2x.png in Resources */,
+				D239492519877E9500975C27 /* Default1@2x.png in Resources */,
 				D285593E197BCDCA00F49779 /* hui_bg@2x.png in Resources */,
 				D2C9C335197E553B00925D14 /* result_chakan@2x.png in Resources */,
 				D2B6475A197AC5E70074F36B /* my@2x.png in Resources */,
@@ -565,7 +619,6 @@
 				D285594F197C1CA700F49779 /* home_1@2x.png in Resources */,
 				D2C9C326197E188900925D14 /* test_weizuo@2x.png in Resources */,
 				D285594B197C1BDD00F49779 /* home_2@2x.png in Resources */,
-				D285595E197CA8FD00F49779 /* my_change@2x.png in Resources */,
 				D2855945197BD00000F49779 /* liuyan_tijiao@2x.png in Resources */,
 				D2B646F2197A7CE30074F36B /* Images.xcassets in Resources */,
 				D2C9C309197CD01900925D14 /* exam_bg@2x.png in Resources */,
@@ -589,10 +642,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2C9C339197E557B00925D14 /* Exam_resultViewController.m in Sources */,
+				D26816F6198F775200161A03 /* M_regViewController.m in Sources */,
 				D2C9C33C197F677D00925D14 /* SevenSwitch.m in Sources */,
 				D2B64712197A7E7F0074F36B /* M_homeViewController.m in Sources */,
 				D2B6471E197A7EF20074F36B /* M_setViewController.m in Sources */,
 				D2B64718197A7EB20074F36B /* M_selfViewController.m in Sources */,
+				D26816FE1990B3E200161A03 /* M_public.m in Sources */,
 				D2B646F0197A7CE30074F36B /* AppDelegate.m in Sources */,
 				D2C9C330197E370E00925D14 /* home_xuzhiViewController.m in Sources */,
 				D2B646EC197A7CE30074F36B /* main.m in Sources */,
@@ -717,6 +772,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Mfeiji/Mfeiji-Prefix.pch";
 				INFOPLIST_FILE = "Mfeiji/Mfeiji-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/WeiXin",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -728,6 +787,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Mfeiji/Mfeiji-Prefix.pch";
 				INFOPLIST_FILE = "Mfeiji/Mfeiji-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/WeiXin",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

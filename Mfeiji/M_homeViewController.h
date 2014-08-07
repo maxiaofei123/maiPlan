@@ -10,7 +10,7 @@
 @class home_xuzhiViewController;
 
 
-@interface M_homeViewController : UIViewController
+@interface M_homeViewController : UIViewController<UIActionSheetDelegate>
 {
     NSMutableArray * itemArray;
 

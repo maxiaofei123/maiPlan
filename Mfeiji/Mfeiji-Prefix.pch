@@ -16,4 +16,7 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+    #import "WXApi.h"
+    #import "WXApiObject.h"
+    #import "M_public.h"
 #endif

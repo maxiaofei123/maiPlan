@@ -12,6 +12,7 @@
 @interface M_selfViewController ()
 {
     NSArray *nameArr;
+    UIImageView *headView;
 }
 
 @end
@@ -51,23 +52,29 @@
 {
 //-----------------------
     UIImageView * topView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 105, 300, 65)];
-    topView.image = [UIImage imageNamed:@"my_change.png"];
+    topView.image = [UIImage imageNamed:@"my_baidi.png"];
     [topView setUserInteractionEnabled:YES];
     [self.view addSubview:topView];
 
-    UIButton * headBt =[UIButton buttonWithType:UIButtonTypeCustom];
-    headBt.frame =CGRectMake(260, 20, 25, 22);
-    [headBt setImage:[UIImage imageNamed:@"my_quan.png"] forState:UIControlStateNormal];
-    headBt.tag = 1;
-    [headBt addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
-    [topView addSubview:headBt];
-
+    headView = [[UIImageView alloc]initWithFrame:CGRectMake(18, 113, 50, 50)];
+    headView.image = [UIImage imageNamed:@"public_head.png"];
+    headView.userInteractionEnabled = YES;
+    [self.view addSubview:headView];
+    UITapGestureRecognizer *pass = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(upLoad)];
+    [headView addGestureRecognizer:pass];
+    
+    UIButton *changeBt =[[UIButton alloc] init];
+    changeBt =[UIButton buttonWithType:0];
+    [changeBt setImage:[UIImage imageNamed:@"my_xiugai.png"] forState:UIControlStateNormal];
+    [changeBt setFrame:CGRectMake(100, 130, 60, 15)];
+    [changeBt addTarget:self action:@selector(upLoad) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:changeBt];
     //---tableview
     UIImageView * v= [[UIImageView alloc] initWithFrame:CGRectMake(10, 190, 300, 160)];
     v.backgroundColor =[UIColor colorWithPatternImage:[UIImage imageNamed:@"set_shang.png"]];
     [v setUserInteractionEnabled:YES];
     [self.view addSubview:v];
-    tableView = [[UITableView alloc] initWithFrame:CGRectMake(10, 190, 300, 160)];
+   tableView = [[UITableView alloc] initWithFrame:CGRectMake(10, 190, 300, 160)];
     tableView.delegate =self;
     tableView.dataSource =self;
     tableView.backgroundColor = [UIColor whiteColor];
@@ -92,18 +99,7 @@
     lilun.font = [UIFont systemFontOfSize:18];
     lilun.textColor = [UIColor blackColor];
     [scoreView addSubview:lilun];
-    
-//-----添加按钮
-    UIButton * lilunBt = [[UIButton alloc] initWithFrame:CGRectMake(260, 20, 25, 22)];
-    //lilunBt =[UIButton buttonWithType:UIButtonTypeCustom];
-    [lilunBt setImage:[UIImage imageNamed:@"my_quan.png"] forState:UIControlStateNormal];
-    lilunBt.tag = 6;
-    [lilunBt addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
-    [scoreView addSubview:lilunBt];
-    
-    
-
-
+ 
 }
 
 - (void)drawNav
@@ -126,40 +122,6 @@
     [view addSubview:title];
 }
 
--(void)choose:(UIButton *)sender
-{
-    switch (sender.tag) {
-        case 1:
-            NSLog(@"tag=%d",sender.tag);
-            
-            break;
-        case 2:
-            NSLog(@"tag=%d",sender.tag);
-            
-            break;
-        case 3:
-            NSLog(@"tag=%d",sender.tag);
-            
-            break;
-        case 4:
-            NSLog(@"tag=%d",sender.tag);
-            
-            break;
-        case 5:
-            NSLog(@"tag=%d",sender.tag);
-            
-            break;
-        case 6:
-            NSLog(@"tag=%d",sender.tag);
-            break;
-            
-            
-        default:
-            break;
-    }
-
-
-}
 
 #pragma mark -tableview
 
@@ -178,34 +140,139 @@
     [cell addSubview:line];
     
     NSInteger row = [indexPath row];
-
     cell.textLabel.text =[nameArr objectAtIndex:row];
-    UIButton *tableBt = [[UIButton alloc] initWithFrame:CGRectMake(260, 10, 25, 22)];
-   
-    [tableBt setImage:[UIImage imageNamed:@"my_quan.png"] forState:UIControlStateNormal];
-    tableBt.tag = row+2;
-    [tableBt addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
-    [cell addSubview:tableBt];
-    
-        //取消点选效果
-    [cell setSelectionStyle:UITableViewCellEditingStyleNone];
-    
+
     return cell;
     
 }
-
+    
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+}
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 40.0f;
 }
 
-
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+
     return 4;
     
 }
+
+//  选择头像来源
+- (void)upLoad
+{
+    NSLog(@"touxiang");
+    UIActionSheet *sheet =[[UIActionSheet alloc]initWithTitle:@"选择图片来源" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"从相册中选择",@"摄像头拍摄",@"取消", nil];
+    [sheet showInView:[UIApplication sharedApplication].keyWindow];
+}
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex) {
+        case 1:
+        {
+            if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
+                
+                UIImagePickerController *imgPicker = [UIImagePickerController new];
+                imgPicker.delegate = self;
+                imgPicker.allowsEditing= YES;
+                imgPicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+                [self presentViewController:imgPicker animated:YES completion:nil];
+                return;
+            }
+            else {
+                
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                                    message:@"该设备没有摄像头"
+                                                                   delegate:self
+                                                          cancelButtonTitle:nil
+                                                          otherButtonTitles:@"好", nil];
+                [alertView show];
+                
+            }
+            
+        }
+            break;
+        case 0:
+        {
+            UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+            imagePicker.delegate = self;
+            imagePicker.allowsEditing = YES;
+            imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            [self presentViewController:imagePicker animated:YES completion:nil];
+            
+        }
+            break;
+        case 2:
+            
+            break;
+        default:
+            break;
+    }
+    
+}
+
+#pragma 拍照选择照片协议方法
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    
+    [UIApplication sharedApplication].statusBarHidden = NO;
+    
+    NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
+    
+    NSData *data;
+    
+    if ([mediaType isEqualToString:@"public.image"]){
+        
+        //切忌不可直接使用originImage，因为这是没有经过格式化的图片数据，可能会导致选择的图片颠倒或是失真等现象的发生，从UIImagePickerControllerOriginalImage中的Origin可以看出，很原始，哈哈
+        UIImage *originImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+        
+        //图片压缩，因为原图都是很大的，不必要传原图
+        UIImage *scaleImage = [self scaleImage:originImage toScale:0.3];
+        
+        //以下这两步都是比较耗时的操作，最好开一个HUD提示用户，这样体验会好些，不至于阻塞界面
+        if (UIImagePNGRepresentation(scaleImage) == nil) {
+            //将图片转换为JPG格式的二进制数据
+            data = UIImageJPEGRepresentation(scaleImage, 1);
+        } else {
+            //将图片转换为PNG格式的二进制数据
+            data = UIImagePNGRepresentation(scaleImage);
+        }
+        
+        //        //将二进制数据生成UIImage
+        //        UIImage *image = [UIImage imageWithData:data];
+        //
+        //        //将图片传递给截取界面进行截取并设置回调方法（协议）
+        //        headView.image = image;
+        //        //隐藏UIImagePickerController本身的导航栏
+        //        image.navigationBar.hidden = YES;
+        //        [picker pushViewController:captureView animated:YES];
+        
+    }
+}
+
+#pragma mark - 图片回传协议方法
+-(void)passImage:(UIImage *)image
+{
+    headView.image = image;
+}
+
+#pragma mark- 缩放图片
+-(UIImage *)scaleImage:(UIImage *)image toScale:(float)scaleSize
+{
+    UIGraphicsBeginImageContext(CGSizeMake(image.size.width*scaleSize,image.size.height*scaleSize));
+    [image drawInRect:CGRectMake(0, 0, image.size.width * scaleSize, image.size.height *scaleSize)];
+    UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return scaledImage;
+}
+
+
 
 - (void)didReceiveMemoryWarning
 {

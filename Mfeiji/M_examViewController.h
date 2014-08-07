@@ -9,9 +9,9 @@
 #import <UIKit/UIKit.h>
 @class Exam_testViewController;
 
-@interface M_examViewController : UIViewController
+@interface M_examViewController : UIViewController<UIActionSheetDelegate>
 
 @property (strong ,nonatomic)Exam_testViewController * testView;
-- (IBAction)textFiledReturnEditing:(id)sender;
+
 
 @end

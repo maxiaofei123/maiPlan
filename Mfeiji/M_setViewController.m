@@ -112,10 +112,6 @@
                 mySwithch.tag = row;
                 mySwithch.isRounded = NO;
                 [cell addSubview:mySwithch];
-                if (mySwithch.tag == 1) {
-                    mySwithch.on = YES;
-                }
-
             }
             
             break;
@@ -131,9 +127,6 @@
     line.backgroundColor=[UIColor colorWithRed:0.7 green:0.7 blue:0.77 alpha:1];
     [tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [cell addSubview:line];
-    
-    
-   
     
     return cell;
     
@@ -259,6 +252,5 @@
     [super didReceiveMemoryWarning];
    
 }
-
 
 @end

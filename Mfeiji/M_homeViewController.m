@@ -128,9 +128,19 @@
     else
     {
 //        NSLog(@"home_else");
-    
-    }
+        UIActionSheet *sheet = [[UIActionSheet alloc]initWithTitle:@"分享" delegate:self cancelButtonTitle:@"取消"  destructiveButtonTitle:nil otherButtonTitles:@"分享到微信好友",@"分享到朋友圈", nil];
+        [sheet showInView:self.view];
 
+    }
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        [M_public sendLinkContent:0];
+    }else if (buttonIndex == 1){
+        [M_public sendLinkContent:1];
+    }
 }
 
 - (void)didReceiveMemoryWarning
