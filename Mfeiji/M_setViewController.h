@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SBJson.h"
 
 @interface M_setViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>
 @property (strong,nonatomic)UITableView * tableView;

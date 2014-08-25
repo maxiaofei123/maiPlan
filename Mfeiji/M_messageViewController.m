@@ -8,7 +8,7 @@
 
 #import "M_messageViewController.h"
 
-@interface M_messageViewController ()
+@interface M_messageViewController ()<UIAlertViewDelegate>
 {
     UITextView * textView;
     NSString * liuyanStr;
@@ -35,11 +35,18 @@
     UIView * view = [[UIView alloc] initWithFrame:CGRectMake(0, 20, 320, self.view.frame.size.height-20)];
     view.backgroundColor =[UIColor colorWithPatternImage:[UIImage imageNamed:@"hui_bg.png"]];
     [self.view addSubview:view];
-    [self drawNav];
-    [self drawView];
-    
+    [self alertshow];
+//    [self drawNav];
+//    [self drawView];
+//    
     
   
+}
+
+-(void)alertshow
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"此项功能暂时关闭" delegate:self cancelButtonTitle:@"cancel" otherButtonTitles:@"确定", nil];
+    [alert show];
 }
 
 - (void)drawNav

@@ -16,7 +16,7 @@
 {
     if ([WXApi isWXAppInstalled] && [WXApi isWXAppSupportApi]) {
         WXMediaMessage *message = [WXMediaMessage message];
-        message.title = @"Fine　Dining享宴";
+        message.title = @"麦飞机";
         message.description = @"麦飞机,一起飞翔！";
         [message setThumbImage:[UIImage imageNamed:@"weixinlogo.png"]];
         

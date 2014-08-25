@@ -12,6 +12,7 @@
 @interface home_xuzhiViewController ()
 {
     UITextView * textView;
+    NSString * str1;
 }
 
 @end
@@ -37,12 +38,28 @@
     [self.view addSubview:view];
     [self drawNav];
     
+    
+    
+    NSString * plistPath = [[NSBundle mainBundle] pathForResource:@"xuzhi" ofType:@"plist"];
+    NSMutableDictionary *data = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
+    NSLog(@"%@",data);
+    
+    str1 = [[NSString alloc] init];
+    str1 = [data objectForKey:@"1"];
+    NSLog(@"str1 =%@",str1);
+    
     textView = [[UITextView alloc] initWithFrame:CGRectMake(5, 70, 310, self.view.frame.size.height-130)];
+    textView.text = str1;
+    textView.delegate =self;
+    textView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:textView];
+    
     
 }
 
-
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
+    return NO;
+}
 
 
 - (void)drawNav

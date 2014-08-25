@@ -9,6 +9,8 @@
 #import "M_setViewController.h"
 #import "SevenSwitch.h"
 
+
+
 @interface M_setViewController ()
 {
     NSArray * nameArr;
@@ -29,6 +31,7 @@
     return self;
 }
 
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -38,16 +41,18 @@
     view.backgroundColor =[UIColor colorWithPatternImage:[UIImage imageNamed:@"hui_bg.png"]];
     [self.view addSubview:view];
     
-    nameArr = [[NSArray alloc] initWithObjects:@"绑定手机", @"wiffi下自动更新",@"消息通知",@"自动登陆",@"分享",@"检查更新",@"帮助和反馈",@"关于",nil];
+    nameArr = [[NSArray alloc] initWithObjects:@"检查更新",@"帮助和反馈",@"关于",nil];
     
     [self drawNav];
     [self drawView];
     
 }
 
+
 -(void)drawView
 {
-    tableView = [[UITableView alloc] initWithFrame:CGRectMake(10, 80, 300, 400) style:UITableViewStyleGrouped];
+    //tableView = [[UITableView alloc] initWithFrame:CGRectMake(10, 80, 300, 200) style:UITableViewStyleGrouped];
+    tableView = [[UITableView alloc] initWithFrame:CGRectMake(20, 100, 280, 200)];
     tableView.delegate = self;
     tableView.dataSource =self;
     tableView.backgroundColor = [UIColor clearColor];
@@ -56,6 +61,7 @@
     [self.view addSubview:tableView];
 
 }
+
 
 - (void)drawNav
 {
@@ -82,8 +88,7 @@
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger row = [indexPath row];
-    int section = indexPath.section;
-    static NSString *tableSampleIdentifier = @"TableSampleIdentifier";
+       static NSString *tableSampleIdentifier = @"TableSampleIdentifier";
     
     UITableViewCell * cell =  [tableView dequeueReusableCellWithIdentifier:tableSampleIdentifier];
     
@@ -93,36 +98,37 @@
     }
 
     
-    switch (section) {
-        case 0:
-            cell.textLabel.text =[nameArr objectAtIndex:row];
-            if (row == 0 || row == 4) {
-              
-            }
-            else//添加开关
-            {
-                 [cell setSelectionStyle:UITableViewCellEditingStyleNone];
-                
-                SevenSwitch * mySwithch = [[SevenSwitch alloc]initWithFrame:CGRectMake(260, 20, 40, 20)];
-                mySwithch.center = CGPointMake(260, 20);
-                [mySwithch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
-                mySwithch.offImage = [UIImage imageNamed:@"switch_off1.png"];
-                mySwithch.onImage = [UIImage imageNamed:@"switch_on.png"];
-                mySwithch.onColor = [UIColor colorWithHue:0.08f saturation:0.74f brightness:1.00f alpha:1.00f];
-                mySwithch.tag = row;
-                mySwithch.isRounded = NO;
-                [cell addSubview:mySwithch];
-            }
-            
-            break;
-        case 1:
-            cell.textLabel.text =[nameArr objectAtIndex:row+5];
-            break;
-            
-        default:
-            break;
-    }
-    
+//    switch (section) {
+//        case 0:
+//            cell.textLabel.text =[nameArr objectAtIndex:row];
+//            if (row == 0 || row == 4) {
+//              
+//            }
+//            else//添加开关
+//            {
+//                [cell setSelectionStyle:UITableViewCellEditingStyleNone];//取消cell点击效果
+//                
+//                SevenSwitch * mySwithch = [[SevenSwitch alloc]initWithFrame:CGRectMake(260, 20, 40, 20)];
+//                mySwithch.center = CGPointMake(260, 20);
+//                [mySwithch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
+//                mySwithch.offImage = [UIImage imageNamed:@"switch_off1.png"];
+//                mySwithch.onImage = [UIImage imageNamed:@"switch_on.png"];
+//                mySwithch.onColor = [UIColor colorWithHue:0.08f saturation:0.74f brightness:1.00f alpha:1.00f];
+//                mySwithch.tag = row;
+//                mySwithch.isRounded = NO;
+//                [cell addSubview:mySwithch];
+//            }
+//            
+//            break;
+//        case 1:
+          //  cell.textLabel.text =[nameArr objectAtIndex:row];
+//            break;
+//            
+//        default:
+//            break;
+   // }
+    cell.textLabel.text =[nameArr objectAtIndex:row];
+    cell.font = [UIFont systemFontOfSize:14];
     UIView *line=[[UIView alloc]initWithFrame:CGRectMake(0, 39.5, 300,0.5)];
     line.backgroundColor=[UIColor colorWithRed:0.7 green:0.7 blue:0.77 alpha:1];
     [tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -141,37 +147,44 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section == 0) {
-        return 5;
-    }
-    else
-    {
-        return 3;
-    }
+//    if (section == 0) {
+//        return 5;
+//    }
+//    else
+//    {
+//        return 3;
+//    }
     
-    return 1;
+    return 3;
     
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 2;
+    return 1;
 }
 
 //选中Cell响应事件
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];//选中后的反显颜色即刻消失
-    int row = indexPath.row;
-    int section = indexPath.section;
-    NSLog(@"row =%d , %d",row,section);
     
-    if (section == 0) {
-        
-    }
-    else if (section ==1)
-    {
-        
+    switch (indexPath.row) {
+            
+        case 0://检查更新
+            [self onCheckVersion];
+            
+            break;
+        case 1://帮助和反馈
+            
+            break;
+        case 2://关于
+            
+            break;
+            
+        default:
+            break;
     }
     
+
     
 }
 
@@ -201,14 +214,15 @@
 }
 
 #pragma mark -wifii
-
+//更新应用程序
 -(void)onCheckVersion
 {
     NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
-    //CFShow((__bridge CFTypeRef)(infoDic));
+    CFShow((__bridge CFTypeRef)(infoDic));
     NSString *currentVersion = [infoDic objectForKey:@"CFBundleVersion"];
     
-    NSString *URL = @"http://itunes.apple.com/lookup?id=你的应用程序的ID";
+    NSString *URL = @"http://itunes.apple.com/lookup?id=com.exhibition.ideer";
+    
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:[NSURL URLWithString:URL]];
     [request setHTTPMethod:@"POST"];
@@ -217,14 +231,17 @@
     NSData *recervedData = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&error];
     
     NSString *results = [[NSString alloc] initWithBytes:[recervedData bytes] length:[recervedData length] encoding:NSUTF8StringEncoding];
-    NSDictionary *dic ;//= [results JSONValue];
+    
+    NSDictionary *dic = [results JSONValue];
+
     NSArray *infoArray = [dic objectForKey:@"results"];
+    NSLog(@"info=%@",infoArray);
     if ([infoArray count]) {
         NSDictionary *releaseInfo = [infoArray objectAtIndex:0];
         NSString *lastVersion = [releaseInfo objectForKey:@"version"];
         
         if (![lastVersion isEqualToString:currentVersion]) {
-            //trackViewURL = [releaseInfo objectForKey:@"trackVireUrl"];
+          
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"更新" message:@"有新的版本更新，是否前往更新？" delegate:self cancelButtonTitle:@"关闭" otherButtonTitles:@"更新", nil];
             alert.tag = 10000;
             [alert show];
@@ -236,7 +253,9 @@
             [alert show];
         }
     }
+
 }
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (alertView.tag==10000) {
@@ -244,6 +263,15 @@
             NSURL *url = [NSURL URLWithString:@"https://itunes.apple.com"];
             [[UIApplication sharedApplication]openURL:url];
         }
+    }
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        [M_public sendLinkContent:0];
+    }else if (buttonIndex == 1){
+        [M_public sendLinkContent:1];
     }
 }
 

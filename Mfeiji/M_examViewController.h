@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 @class Exam_testViewController;
 
-@interface M_examViewController : UIViewController<UIActionSheetDelegate>
+@interface M_examViewController : UIViewController<UIActionSheetDelegate,UITextFieldDelegate>
 
 @property (strong ,nonatomic)Exam_testViewController * testView;
 

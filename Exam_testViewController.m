@@ -13,14 +13,25 @@
 @interface Exam_testViewController ()
 {
     NSArray * labarArr;
+    NSArray *textName;
+    
+    NSMutableDictionary *zhuangTaiDic;
     
     UIButton * selectBt1;
     UIButton * selectBt2;
     UIButton * selectBt3;
+    UIButton * TMPBT;
+    
     int selectTag;
+    int timeDate;
+    int  textId;
+    
+    
     
     UILabel * timeLbale;
-    int timeDate;
+    UILabel *testLable;
+   
+    UIImageView * view;
 }
 
 @end
@@ -42,31 +53,164 @@
     [super viewDidLoad];
 
     self.view.backgroundColor = [UIColor blackColor];
-    UIView * view = [[UIView alloc] initWithFrame:CGRectMake(0, 20, 320, self.view.frame.size.height-20)];
-    view.backgroundColor =[UIColor colorWithPatternImage:[UIImage imageNamed:@"hui_bg.png"]];
-    [self.view addSubview:view];
 
     labarArr = [[NSArray alloc]initWithObjects:@"上一题",@"未做",@"考试倒计时",@"交卷",@"下一题", nil ];
- 
+    textName = [[NSArray alloc] initWithObjects:@"太阳1",@"太阳2",@"太阳3", @"上一题",@"未做",@"考试倒计时",@"交卷",@"下一题",nil];
+    zhuangTaiDic = [[NSMutableDictionary alloc] init];
     [self drawNav];
     [self drawView];
+    [self setQuestion:0];
     [self drawTabar];
     [self hideTabBar];//隐藏tabbar
-    
+    textId =0;
+    TMPBT = nil;
     //实现倒计时
     timeDate =30*60;
     NSTimer * timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateTime) userInfo:nil repeats:YES];
     [self updateTime];
-
     
 }
+
+
+
+-(void)setQuestion:(int)number
+{
+    
+    NSArray * examArr = [[NSArray alloc] init];
+    examArr = [textName objectAtIndex:number];
+    testLable.text = [NSString stringWithFormat:@"%d: %@",number+1,examArr];
+    
+    
+    for (int i=0; i<3; i++) {
+        
+        UILabel *lableName = [[UILabel alloc] initWithFrame:CGRectMake(70, 200+i*30, 200, 15)];
+        lableName.textColor = [UIColor whiteColor];
+        [view addSubview:lableName];
+    }
+
+}
+
+
+-(void)choose:(UIButton *)sender
+{
+ 
+    switch (sender.tag) {
+            
+        case 1:
+            [self showTabBar];
+            
+            [self.navigationController popViewControllerAnimated:NO];
+            
+            break;
+        case 2:
+            
+            break;
+        case 3:
+            [zhuangTaiDic setObject:@"1" forKey:[NSString stringWithFormat:@"%d",textId]];
+            selectBt1.selected = YES;
+            selectBt2.selected = NO;
+            selectBt3.selected = NO;
+            
+            selectTag =1;
+            
+            break;
+        case 4:
+            [zhuangTaiDic setObject:@"2" forKey:[NSString stringWithFormat:@"%d",textId]];
+            selectBt1.selected = NO;
+            selectBt2.selected = YES;
+            selectBt3.selected = NO;
+            selectTag =2;
+            break;
+        case 5:
+            [zhuangTaiDic setObject:@"3" forKey:[NSString stringWithFormat:@"%d",textId]];
+            selectBt1.selected = NO;
+            selectBt2.selected = NO;
+            selectBt3.selected = YES;
+            selectTag =3;
+            break;
+        case 6://上一题
+        {
+            textId = textId ==0 ? 0 :textId -1;
+            NSString * valueStr = [[NSString alloc] init];
+            valueStr =[zhuangTaiDic objectForKey:[NSString stringWithFormat:@"%d",textId]];
+            if ([valueStr isEqualToString:@"1"]) {
+                selectBt1.selected = YES;
+                selectBt2.selected = NO;
+                selectBt3.selected = NO;
+            }
+            else if ([valueStr isEqualToString:@"2"]) {
+                selectBt1.selected = NO;
+                selectBt2.selected = YES;
+                selectBt3.selected = NO;
+            }
+            else if ([valueStr isEqualToString:@"3"]) {
+                selectBt1.selected = NO;
+                selectBt2.selected = NO;
+                selectBt3.selected = YES;
+            }
+            else{
+                selectBt1.selected = NO;
+                selectBt2.selected = NO;
+                selectBt3.selected = NO;
+            }
+
+            [self setQuestion:textId];
+        }
+    
+            break;
+        case 7:
+            
+            break;
+        case 8:
+            
+            resultView =[[Exam_resultViewController alloc] init];
+            resultView.hidesBottomBarWhenPushed = NO;
+            [self.navigationController pushViewController:resultView animated:NO];
+            
+            break;
+        case 9://下一题
+        {
+            textId =textId == (textName.count-1) ? (textName.count-1) :textId + 1;
+            NSString * valueStr = [[NSString alloc] init];
+            valueStr =[zhuangTaiDic objectForKey:[NSString stringWithFormat:@"%d",textId]];
+            if ([valueStr isEqualToString:@"1"]) {
+                selectBt1.selected = YES;
+                selectBt2.selected = NO;
+                selectBt3.selected = NO;
+            }
+            else if ([valueStr isEqualToString:@"2"]) {
+                selectBt1.selected = NO;
+                selectBt2.selected = YES;
+                selectBt3.selected = NO;
+            }
+           else if ([valueStr isEqualToString:@"3"]) {
+                selectBt1.selected = NO;
+                selectBt2.selected = NO;
+                selectBt3.selected = YES;
+            }
+           else{
+               selectBt1.selected = NO;
+               selectBt2.selected = NO;
+               selectBt3.selected = NO;
+           }
+           
+            [self setQuestion:textId];
+        }
+            break;
+            
+        default:
+            break;
+    } 
+    
+}
+
 
 -(void)drawView
 {
     UIImageView * topView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 60, 320, 40)];
     topView.image = [UIImage imageNamed:@"test_lan.png"];
     [self.view addSubview:topView];
-//---------lable---
+    //---------lable---
     UILabel *userNO = [[UILabel alloc] initWithFrame:CGRectMake(30, 9, 80,  20)];
     userNO.text = @"学生序号:";
     userNO.textColor = [UIColor whiteColor];
@@ -77,43 +221,47 @@
     userLable.text = @"学生姓名:";
     userLable.textColor = [UIColor whiteColor];
     userLable.font = [UIFont systemFontOfSize:16];
-
+    
     [topView addSubview:userLable];
     
-//---------考试题目---------
-    UILabel *testLable = [[UILabel alloc] initWithFrame:CGRectMake(30, 110, 280, 80)];
-    [self.view addSubview:testLable];
     
-
-    selectBt1 = [[UIButton alloc] initWithFrame:CGRectMake(40, 200, 30, 30)];
+    //---------考试题目---------
+    view = [[UIImageView alloc] initWithFrame:CGRectMake(0, 100, 320, self.view.frame.size.height -100)];
+    [view setUserInteractionEnabled:YES];
+    view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"hui_bg.png"]];
+    [self.view addSubview:view];
+    
+    
+    testLable = [[UILabel alloc] initWithFrame:CGRectMake(30, 10, 280, 80)];
+    
+    [view addSubview:testLable];
+    
+    
+    
+    selectBt1 = [[UIButton alloc] initWithFrame:CGRectMake(40, 100, 30, 30)];
     [selectBt1 setImage:[UIImage imageNamed:@"test_Bt.png"] forState:UIControlStateNormal];
     [selectBt1 setImage:[UIImage imageNamed:@"test_Bt1.png"] forState:UIControlStateSelected];
     selectBt1.tag =3;
     [selectBt1 addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:selectBt1];
+    [view addSubview:selectBt1];
     
-    selectBt2 = [[UIButton alloc] initWithFrame:CGRectMake(40, 230, 30, 30)];
+    selectBt2 = [[UIButton alloc] initWithFrame:CGRectMake(40, 130, 30, 30)];
     [selectBt2 setImage:[UIImage imageNamed:@"test_Bt.png"] forState:UIControlStateNormal];
     [selectBt2 setImage:[UIImage imageNamed:@"test_Bt1.png"] forState:UIControlStateSelected];
     selectBt2.tag =4;
     [selectBt2 addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:selectBt2];
+    [view addSubview:selectBt2];
     
-    selectBt3 = [[UIButton alloc] initWithFrame:CGRectMake(40, 260, 30, 30)];
+    selectBt3 = [[UIButton alloc] initWithFrame:CGRectMake(40, 160, 30, 30)];
     [selectBt3 setImage:[UIImage imageNamed:@"test_Bt.png"] forState:UIControlStateNormal];
     [selectBt3 setImage:[UIImage imageNamed:@"test_Bt1.png"] forState:UIControlStateSelected];
     selectBt3.tag =5;
     [selectBt3 addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:selectBt3];
-    
-    for (int i=0; i<3; i++) {
-        
-        UILabel *lableName = [[UILabel alloc] initWithFrame:CGRectMake(70, 200+i*30, 200, 15)];
-        lableName.textColor = [UIColor whiteColor];
-        [self.view addSubview:lableName];
-    }
+    [view addSubview:selectBt3];
     
 }
+
+
  -(void)drawTabar
 {
     //--------tabbar按钮--------
@@ -186,6 +334,7 @@
     
 }
 
+
 - (void)drawNav
 {
    static UIView *view;
@@ -220,60 +369,8 @@
     [view addSubview:rButton];
     
 }
--(void)choose:(UIButton *)sender
-{
-    switch (sender.tag) {
- 
-        case 1:
-            [self showTabBar];
-            [self.navigationController popViewControllerAnimated:NO];
-            
-            break;
-        case 2:
-            
-            break;
-        case 3:
-            selectBt1.selected = YES;
-            selectBt2.selected = NO;
-            selectBt3.selected = NO;
-            selectTag =1;
-            
-            break;
-        case 4:
-            selectBt1.selected = NO;
-            selectBt2.selected = YES;
-            selectBt3.selected = NO;
-            selectTag =2;
-            break;
-        case 5:
-            selectBt1.selected = NO;
-            selectBt2.selected = NO;
-            selectBt3.selected = YES;
-            selectTag =3;
-            break;
-        case 6:
-            
-            break;
-        case 7:
-            
-            break;
-        case 8:
-      
-            resultView =[[Exam_resultViewController alloc] init];
-            resultView.hidesBottomBarWhenPushed = NO;
-            [self.navigationController pushViewController:resultView animated:NO];
-            
-            break;
-        case 9:
-            
-            break;
-            
-        default:
-            break;
-    }
-    
-    
-}
+
+
 //隐藏tabbar
 - (void)hideTabBar {
     if (self.tabBarController.tabBar.hidden == YES) {
@@ -309,7 +406,7 @@
     self.tabBarController.tabBar.hidden = NO;
     
 }
-
+//更新时间
 -(void)updateTime
 {
     timeDate = timeDate - 1 > 0 ? timeDate - 1 : 0;
@@ -332,7 +429,7 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-   }
+}
 
 
 @end

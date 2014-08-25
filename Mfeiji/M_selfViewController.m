@@ -40,9 +40,6 @@
     
     nameArr = [[NSArray alloc] initWithObjects:@"昵称:",@"性别:",@"手机:",@"航校:", nil];
     
-    
-
-
     [self drawNav];
     [self drawView];
     

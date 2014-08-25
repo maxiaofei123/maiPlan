@@ -21,6 +21,7 @@
     int  btSelectTag;
     
     
+    
     UITextField *Password;
     UITextField *UserName;
 
@@ -59,76 +60,77 @@
 
 -(void)drawView
 {
-   
-
-    
 // ------用户名和密码框 and text----
-    UIImageView *userView = [[UIImageView alloc] initWithFrame:CGRectMake(50, 100, 230, 50)];
+    UIImageView *userView = [[UIImageView alloc] initWithFrame:CGRectMake(55, 100, 210, 50)];
     userView.image = [UIImage imageNamed:@"exam_user.png"];
     [userView setUserInteractionEnabled:YES];
     [self.view addSubview:userView];
-    UserName = [[UITextField alloc] initWithFrame:CGRectMake(40, 0, 185, 50)];
+    UserName = [[UITextField alloc] initWithFrame:CGRectMake(40, 0, 170, 50)];
     UserName.placeholder = @"请输入用户名";
+    UserName.delegate =self;
     UserName.font = [UIFont systemFontOfSize:16];
     UserName.textColor = [UIColor whiteColor];
     [userView addSubview:UserName];
     
     
-    UIImageView *pwdView = [[UIImageView alloc] initWithFrame:CGRectMake(50, 160, 230, 50)];
+    UIImageView *pwdView = [[UIImageView alloc] initWithFrame:CGRectMake(55, 160, 210, 50)];
     pwdView.image = [UIImage imageNamed:@"exam_pwd.png"];
     [pwdView setUserInteractionEnabled:YES];
     [self.view addSubview:pwdView];
     
-    Password = [[UITextField alloc] initWithFrame:CGRectMake(40, 0, 185, 50)];
+    Password = [[UITextField alloc] initWithFrame:CGRectMake(40, 0, 170, 50)];
     Password.placeholder = @"请输入密码";
+    Password.secureTextEntry = YES;
+    Password.delegate =self;
     Password.font = [UIFont systemFontOfSize:16];
     Password.textColor = [UIColor whiteColor];
     [pwdView addSubview:Password];
     
     //  selectButton
     
-    select1 = [[UIButton alloc] initWithFrame:CGRectMake(100, 220, 20, 20)];
-    [select1 setImage:[UIImage imageNamed:@"exam_circle.png"] forState:UIControlStateNormal];
-    [select1 setImage:[UIImage imageNamed:@"exam_circle1.png"] forState:UIControlStateSelected];
-    select1.tag = 3;
-    [select1 addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
-    select1.selected = YES;
-    [self.view addSubview:select1];
+//    select1 = [[UIButton alloc] initWithFrame:CGRectMake(100, 220, 20, 20)];
+//    [select1 setImage:[UIImage imageNamed:@"exam_circle.png"] forState:UIControlStateNormal];
+//    [select1 setImage:[UIImage imageNamed:@"exam_circle1.png"] forState:UIControlStateSelected];
+//    select1.tag = 3;
+//    [select1 addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
+//    select1.selected = YES;
+//    [self.view addSubview:select1];
+//    
+//    select2 = [[UIButton alloc] initWithFrame:CGRectMake(100, 240, 20, 20)];
+//    [select2 setImage:[UIImage imageNamed:@"exam_circle.png"] forState:UIControlStateNormal];
+//    [select2 setImage:[UIImage imageNamed:@"exam_circle1.png"] forState:UIControlStateSelected];
+//    select2.tag = 4;
+//    [select2 addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:select2];
+//    
+//    select3 = [[UIButton alloc] initWithFrame:CGRectMake(100, 260, 20, 20)];
+//    [select3 setImage:[UIImage imageNamed:@"exam_circle.png"] forState:UIControlStateNormal];
+//    [select3 setImage:[UIImage imageNamed:@"exam_circle1.png"] forState:UIControlStateSelected];
+//    select3.tag = 5;
+//    [select3 addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:select3];
     
-    select2 = [[UIButton alloc] initWithFrame:CGRectMake(100, 240, 20, 20)];
-    [select2 setImage:[UIImage imageNamed:@"exam_circle.png"] forState:UIControlStateNormal];
-    [select2 setImage:[UIImage imageNamed:@"exam_circle1.png"] forState:UIControlStateSelected];
-    select2.tag = 4;
-    [select2 addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:select2];
-    
-    select3 = [[UIButton alloc] initWithFrame:CGRectMake(100, 260, 20, 20)];
-    [select3 setImage:[UIImage imageNamed:@"exam_circle.png"] forState:UIControlStateNormal];
-    [select3 setImage:[UIImage imageNamed:@"exam_circle1.png"] forState:UIControlStateSelected];
-    select3.tag = 5;
-    [select3 addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:select3];
-    
-    for (int i =0; i<3; i++) {
-        UILabel *lableName = [[UILabel alloc] initWithFrame:CGRectMake(123, 223+i*20, 200, 15)];
-        lableName.text = [lableArr objectAtIndex:i];
-        lableName.textColor = [UIColor whiteColor];
-        [self.view addSubview:lableName];
+//    for (int i =0; i<3; i++) {
+//        UILabel *lableName = [[UILabel alloc] initWithFrame:CGRectMake(123, 223+i*20, 200, 15)];
+//        lableName.text = [lableArr objectAtIndex:i];
+//        lableName.textColor = [UIColor whiteColor];
+//        [self.view addSubview:lableName];
+//    }
 //---------开始考试------
-        UIButton *startBt = [[UIButton alloc] initWithFrame:CGRectMake(100, 305, 130, 40)];
+        UIButton *startBt = [[UIButton alloc] initWithFrame:CGRectMake(100, 225, 130, 40)];
         [startBt setImage:[UIImage imageNamed:@"exam_start.png"] forState:UIControlStateNormal];
         startBt.tag = 6;
-        [startBt addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
+        [startBt addTarget:self action:@selector(login) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:startBt];
  //------不登陆直接考试--
-        UIButton *noLogin = [[UIButton alloc] initWithFrame:CGRectMake(100, 355, 130, 40)];
+        UIButton *noLogin = [[UIButton alloc] initWithFrame:CGRectMake(100, 305, 130, 40)];
         [noLogin setImage:[UIImage imageNamed:@"exam_budenglu.png"] forState:UIControlStateNormal];
         noLogin.tag = 7;
         [noLogin addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:noLogin];
         
 //------我要注册---
-        UIButton *zhuce = [[UIButton alloc] initWithFrame:CGRectMake(115, 400, 120, 30)];
+        UIButton *zhuce = [[UIButton alloc] initWithFrame:CGRectMake(105, 360, 120, 30)];
         [zhuce setImage:[UIImage imageNamed:@"exam_woyaozhuce.png"] forState:UIControlStateNormal];
         zhuce.tag = 8;
         [zhuce addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
@@ -136,15 +138,13 @@
         
         UIButton *lost = [UIButton buttonWithType:0];
         [lost setFrame:CGRectMake((self.view.frame.size.width-150)/2, self.view.frame.size.height-44-30, 150, 20)];
-        [lost setTitle:@"忘记密码" forState:UIControlStateNormal];
+        [lost setTitle:@"忘记密码?" forState:UIControlStateNormal];
         [lost setBackgroundColor:[UIColor clearColor]];
         lost.titleLabel.font = [UIFont systemFontOfSize:13.];
       //  [lost addTarget:self action:@selector(lost) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:lost];
-
-        
-        
-    }
+    
+    
 }
 
 - (void)drawNav
@@ -164,11 +164,11 @@
     title.textColor = [UIColor whiteColor];
     [view addSubview:title];
     
-    UIButton *homeBt =[[UIButton alloc] initWithFrame:CGRectMake(13, 7, 28, 27)];
-    [homeBt setImage:[UIImage imageNamed:@"public_home.png"] forState:UIControlStateNormal];
-    homeBt.tag =1;
-    [homeBt addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:homeBt];
+//    UIButton *homeBt =[[UIButton alloc] initWithFrame:CGRectMake(13, 7, 28, 27)];
+//    [homeBt setImage:[UIImage imageNamed:@"public_home.png"] forState:UIControlStateNormal];
+//    homeBt.tag =1;
+//    [homeBt addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
+//    [view addSubview:homeBt];
     
     UIButton *rButton =[[UIButton alloc] init];
     rButton =[UIButton buttonWithType:0];
@@ -199,33 +199,32 @@
             
             break;
         case 3:
+        {
             select1.selected = YES;
             select2.selected =NO;
             select3.selected =NO;
             btSelectTag =1;
+        }
             
             break;
         case 4:
+        {
             select1.selected = NO;
             select2.selected =YES;
             select3.selected =NO;
             btSelectTag =2;
-            
+        }
             break;
         case 5:
+        {
             select1.selected = NO;
             select2.selected =NO;
             select3.selected =YES;
             btSelectTag =3;
+        }
             
             break;
             
-        case 6:
-            {
-                
-            }
-            
-            break;
         case 7:
             
             _testView = [[Exam_testViewController alloc] init];
@@ -235,7 +234,7 @@
         case 8:
             {
                 M_regViewController * reg = [[M_regViewController alloc] init];
-                [self.navigationController pushViewController:reg animated:NO];
+                [self.navigationController pushViewController:reg animated:YES];
         
             }
             
@@ -247,6 +246,32 @@
     }
 
 }
+
+//登陆成功后进入考试界面
+-(void)login
+{
+    NSString * msg = @"ok";
+    if (!([UserName.text length]>0)) {
+        msg =@"请输入用户名";
+    }
+    else if(Password.text.length <6 || Password.text.length >20)
+    {
+        msg =@"请重新输入密码";
+    
+    }
+    
+    if (![msg isEqualToString:@"ok"]) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                            message:msg
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"确定"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }
+
+}
+
+//........
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {

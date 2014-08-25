@@ -14,6 +14,7 @@
 #define Height(xx) xx >= 7.0?64:0
 
 #ifdef __OBJC__
+  #import <QuartzCore/QuartzCore.h>
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
     #import "WXApi.h"

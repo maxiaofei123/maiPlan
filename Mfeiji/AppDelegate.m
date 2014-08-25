@@ -38,8 +38,6 @@
     [intoBt addTarget:self action:@selector(intoNext:) forControlEvents:UIControlEventTouchUpInside];
     [self.window addSubview:intoBt];
     
-    
-    
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -77,7 +75,7 @@
     _self_Nav.tabBarItem.title = @"我的";
     _self_Nav.tabBarItem.image = [UIImage imageNamed:@"my.png"];
     
-    _message_Nav.tabBarItem.title = @"留言";
+    _message_Nav.tabBarItem.title = @"航校";
     _message_Nav.tabBarItem.image = [UIImage imageNamed: @"liuyan.png"];
     
     _set_Nav.tabBarItem.title = @"设置";
@@ -93,7 +91,6 @@
     [tabBar.tabBar insertSubview:v atIndex:0];
     self.window.rootViewController = tabBar;
 
-    
 
 }
 

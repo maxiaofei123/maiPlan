@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 @class M_homeViewController;
 
-@interface home_xuzhiViewController : UIViewController
+@interface home_xuzhiViewController : UIViewController<UITextViewDelegate>
 
 @property (strong,nonatomic) M_homeViewController * homeView;
 @property (strong ,nonatomic)NSString *titleStr;

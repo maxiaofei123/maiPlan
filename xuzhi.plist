@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>1</key>
+	<string>Item size(每个item的大小)2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+}
+
+
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ 
+
+2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+}
+
+ Item size(每个item的大小)
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ 
+
+2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+}
+
+ vItem size(每个item的大小)
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ 
+
+2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+}
+
+ Item size(每个item的大小)
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ 
+
+2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+}
+
+ Item size(每个item的大小)
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ 
+
+2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+}
+
+ Item size(每个item的大小)
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ 
+
+2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+}
+
+ Item size(每个item的大小)
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ 
+
+2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+}
+
+Item size(每个item的大小)
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ 
+
+2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+}
+
+ Item size(每个item的大小)
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ 
+
+2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+}
+
+ Item size(每个item的大小)
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ 
+
+2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+}
+
+ Item size(每个item的大小)
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ 
+
+2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+}
+
+ Item size(每个item的大小)
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ 
+
+2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+}
+
+ Item size(每个item的大小)
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ 
+
+2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+}
+
+ Item size(每个item的大小)
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ 
+
+2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+}
+
+ Item size(每个item的大小)
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ 
+
+2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+}
+
+ Item size(每个item的大小)
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ 
+
+2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+}
+
+ Item size(每个item的大小)
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ 
+
+2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+Item size(每个item的大小)
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ 
+
+2、  也可以通过delegate对每一个item进行配置，如下代码
+
+collectionView:layout:sizeForItemAt
+
+IndexPath:
+
+{
+
+return...;
+
+1、  可以进行全局配置,如下代码
+
+@property(CGSize)itemSize
+
+layout.itemSize= CGSizeMake(30,20);
+
+ </string>
+	<key>2</key>
+	<string>使用自己的layout（UICollectionViewLayout）
+UICollectionViewLayout是一个抽象基类，你需要继承自他，来为collection view生成layout信息。Layout对象的作用是决定cells，Supplementary views和Decorationviews在collection view中的布局位置。
+
+你需要计算如下view的layout属性
+
+n  Cells
+
+n  Supplementary views
+
+n  Decoration views
+
+ 
+
+系统也为我们定义了layout属性，即UICollectionViewLayoutAttributes，它主要包括如下内容：
+
+n  位置
+
+n  大小
+
+n  透明度
+
+n  ZIndex
+
+n  转场</string>
+	<key>3</key>
+	<string></string>
+	<key>4</key>
+	<string></string>
+</dict>
+</plist>

@@ -15,7 +15,7 @@
     
     UITextField *Password;
     UITextField *UserName;
-    UITextField *confirmPassword;
+    UITextField *email;
     UITextField *phoneNumber;
     UITextField *verCode;
     UIButton *getVer;
@@ -24,6 +24,9 @@
     UIImagePickerController *imagePick;
     
     UIScrollView *scroll;
+    
+    
+    NSArray *nameArr;
 }
 
 @end
@@ -45,12 +48,13 @@
     self.navigationController.navigationBarHidden = YES;
     self.view.backgroundColor = [UIColor blackColor];
     
+    nameArr = [[NSArray alloc] initWithObjects:@"昵称:",@"邮箱:",@"密码:", nil];
     
     viewBg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 20, 320, self.view.frame.size.height)];
     viewBg.userInteractionEnabled = YES;
     viewBg.image =[UIImage imageNamed:@"exam_bg.png"];
     [self.view addSubview:viewBg];
-    
+  //定义scroll为了方便上移下移
     scroll = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, viewBg.frame.size.width, viewBg.frame.size.height)];
     scroll.backgroundColor = [UIColor clearColor];
     scroll.userInteractionEnabled = YES;
@@ -69,6 +73,8 @@
 }
 
 - (void)drawNav
+
+
 {
     UIView *view;
     view = [[UIView alloc]initWithFrame:CGRectMake(0, -20, self.view.frame.size.width, 44)];
@@ -95,95 +101,102 @@
 
 -(void)drawView
 {
-    headView = [[UIImageView alloc]initWithFrame:CGRectMake(130, 50, 80, 80)];
-    headView.image = [UIImage imageNamed:@"public_head.png"];
-    headView.userInteractionEnabled = YES;
-    [scroll addSubview:headView];
-    UITapGestureRecognizer *pass = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(upLoad)];
-    [headView addGestureRecognizer:pass];
+//    headView = [[UIImageView alloc]initWithFrame:CGRectMake(130, 50, 80, 80)];
+//    headView.image = [UIImage imageNamed:@"public_head.png"];
+//    headView.userInteractionEnabled = YES;
+//    [scroll addSubview:headView];
+//    UITapGestureRecognizer *pass = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(upLoad)];
+//    [headView addGestureRecognizer:pass];
+    
+    
+    for (int  i=0; i<3; i++) {
+        UILabel * l =[[UILabel  alloc] initWithFrame:CGRectMake(60, 70+80*i, 100, 20)];
+        l.text = [nameArr objectAtIndex:i];
+        l.textColor = [UIColor whiteColor];
+        l.font = [UIFont systemFontOfSize:14];
+        [scroll addSubview:l];
+        
+        UIImageView * v = [[UIImageView alloc] initWithFrame:CGRectMake(60, 100+80*i, 200, 40)];
+        if (i==0) {
+            v.image = [UIImage imageNamed:@"reg_user.png"];
+        }else{
+            v.image = [UIImage imageNamed:@"reg_kuang.png"];
+        }
+        [scroll addSubview:v];
+    }
     
     // ------用户名和密码框 and text----
-    UIImageView *userView = [[UIImageView alloc] initWithFrame:CGRectMake(50, 140, 230, 50)];
-    userView.image = [UIImage imageNamed:@"exam_user.png"];
-    [userView setUserInteractionEnabled:YES];
-    [scroll addSubview:userView];
-    UserName = [[UITextField alloc] initWithFrame:CGRectMake(40, 0, 185, 50)];
+    UserName = [[UITextField alloc] initWithFrame:CGRectMake(70, 105, 185, 30)];
     UserName.placeholder = @"请输入用户名";
     UserName.delegate = self;
     UserName.returnKeyType = UIReturnKeyNext;
     UserName.font = [UIFont systemFontOfSize:16];
     UserName.textColor = [UIColor whiteColor];
-    [userView addSubview:UserName];
+    [scroll addSubview:UserName];
+    
+    email =[[UITextField alloc] initWithFrame:CGRectMake(70, 185, 185, 30)];
+    email.placeholder = @"请输入一个邮箱";
+    email.delegate = self;
+    email.returnKeyType = UIReturnKeyNext;
+    email.font =[UIFont systemFontOfSize:16];
+    email.textColor = [UIColor whiteColor];
+    [scroll addSubview:email];
     
     
-    UIImageView *pwdView = [[UIImageView alloc] initWithFrame:CGRectMake(50, 200, 230, 50)];
-    pwdView.image = [UIImage imageNamed:@"exam_pwd.png"];
-    [pwdView setUserInteractionEnabled:YES];
-    [scroll addSubview:pwdView];
-    
-    Password = [[UITextField alloc] initWithFrame:CGRectMake(40, 0, 185, 50)];
+    Password = [[UITextField alloc] initWithFrame:CGRectMake(70, 265, 185, 30)];
     Password.placeholder = @"请输入6-20位密码";
     Password.delegate =self;
     Password.returnKeyType = UIReturnKeyNext;
+    Password.secureTextEntry = YES;
     Password.font = [UIFont systemFontOfSize:16];
     Password.textColor = [UIColor whiteColor];
-    [pwdView addSubview:Password];
+    [scroll addSubview:Password];
     
-    UIImageView *confirmPwdView = [[UIImageView alloc] initWithFrame:CGRectMake(50, 260, 230, 50)];
-    confirmPwdView.image = [UIImage imageNamed:@"exam_pwd.png"];
-    [confirmPwdView setUserInteractionEnabled:YES];
-    [scroll addSubview:confirmPwdView];
-    
-    confirmPassword = [[UITextField alloc] initWithFrame:CGRectMake(40, 0, 185, 50)];
-    confirmPassword.placeholder = @"请再次输入密码";
-    confirmPassword.delegate =self;
-    confirmPassword.returnKeyType = UIReturnKeyNext;
-    confirmPassword.font = [UIFont systemFontOfSize:16];
-    confirmPassword.textColor = [UIColor whiteColor];
-    [confirmPwdView addSubview:confirmPassword];
+
     //验证
     
-    UILabel *test = [[UILabel alloc] initWithFrame:CGRectMake(180, 320, 160, 30)];
-    test.text =@"输入11位手机号";
-    [scroll addSubview:test];
-    
-    UIImageView *numberView = [[UIImageView alloc] initWithFrame:CGRectMake(50, 320, 130, 40)];
-    numberView.backgroundColor = [UIColor grayColor];
-    [numberView setUserInteractionEnabled:YES];
-    [scroll addSubview:numberView];
-    
-    phoneNumber = [[UITextField alloc]initWithFrame:CGRectMake(5, 5, 125, 30)];
-    phoneNumber.textColor = [UIColor blackColor];
-    phoneNumber.placeholder = @"请输入手机号码";
-    phoneNumber.delegate =self;
-    phoneNumber.secureTextEntry = YES;
-    phoneNumber.keyboardType = UIKeyboardTypeNumberPad;
-    [numberView addSubview:phoneNumber];
-    //验证码
-    UIImageView *getView = [[UIImageView alloc] initWithFrame:CGRectMake(50, 390, 130, 40)];
-    getView.backgroundColor = [UIColor grayColor];
-    [getView setUserInteractionEnabled:YES];
-    [scroll addSubview:getView];
-    
-    verCode = [[UITextField alloc]initWithFrame:CGRectMake(5, 5, 120, 30)];
-    verCode.textColor = [UIColor blackColor];
-    verCode.placeholder = @"请输入验证码";
-    verCode.delegate =self;
-    verCode.returnKeyType = UIReturnKeyDone;
-    [getView addSubview:verCode];
-    
-    getVer = [UIButton buttonWithType:0];
-    [getVer setFrame:CGRectMake(180, 390, 97, 40)];
-    [getVer setTitle:@"获取验证码" forState:UIControlStateNormal];
-    [getVer setTitleColor:[UIColor colorWithRed:170/255. green:194/255. blue:201/255. alpha:1.] forState:UIControlStateNormal];
-    getVer.backgroundColor = [UIColor whiteColor];
-    getVer.titleLabel.font = [UIFont systemFontOfSize:13.];
-    [getVer addTarget:self action:@selector(reSend) forControlEvents:UIControlEventTouchUpInside];
-    [scroll addSubview:getVer];
+//    UILabel *test = [[UILabel alloc] initWithFrame:CGRectMake(180, 320, 160, 30)];
+//    test.text =@"输入11位手机号";
+//    [scroll addSubview:test];
+//    
+//    UIImageView *numberView = [[UIImageView alloc] initWithFrame:CGRectMake(50, 320, 130, 40)];
+//    numberView.backgroundColor = [UIColor grayColor];
+//    [numberView setUserInteractionEnabled:YES];
+//    [scroll addSubview:numberView];
+//    
+//    phoneNumber = [[UITextField alloc]initWithFrame:CGRectMake(5, 5, 125, 30)];
+//    phoneNumber.textColor = [UIColor blackColor];
+//    phoneNumber.placeholder = @"请输入手机号码";
+//    phoneNumber.delegate =self;
+//    phoneNumber.secureTextEntry = YES;
+//    phoneNumber.keyboardType = UIKeyboardTypeNumberPad;
+//    [numberView addSubview:phoneNumber];
+//    //验证码
+//    UIImageView *getView = [[UIImageView alloc] initWithFrame:CGRectMake(50, 390, 130, 40)];
+//    getView.backgroundColor = [UIColor grayColor];
+//    [getView setUserInteractionEnabled:YES];
+//    [scroll addSubview:getView];
+//    
+//    verCode = [[UITextField alloc]initWithFrame:CGRectMake(5, 5, 120, 30)];
+//    verCode.textColor = [UIColor blackColor];
+//    verCode.placeholder = @"请输入验证码";
+//    verCode.delegate =self;
+//    verCode.returnKeyType = UIReturnKeyDone;
+//    [getView addSubview:verCode];
+//    
+//    getVer = [UIButton buttonWithType:0];
+//    [getVer setFrame:CGRectMake(180, 390, 97, 40)];
+//    [getVer setTitle:@"获取验证码" forState:UIControlStateNormal];
+//    [getVer setTitleColor:[UIColor colorWithRed:170/255. green:194/255. blue:201/255. alpha:1.] forState:UIControlStateNormal];
+//    getVer.backgroundColor = [UIColor whiteColor];
+//    getVer.titleLabel.font = [UIFont systemFontOfSize:13.];
+//    [getVer addTarget:self action:@selector(reSend) forControlEvents:UIControlEventTouchUpInside];
+//    [scroll addSubview:getVer];
     //提交按钮
+    
     UIButton * submmit = [UIButton buttonWithType:0];
-    submmit.frame = CGRectMake(150, 450, 50, 30);
-    submmit.backgroundColor = [UIColor blueColor];
+    submmit.frame = CGRectMake(100, 350, 130, 40);
+    submmit.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"reg_commit.png"]];
     [submmit addTarget:self action:@selector(reg) forControlEvents:
      UIControlEventTouchUpInside];
     [scroll addSubview:submmit];
@@ -196,8 +209,9 @@
     switch (sender.tag) {
         case 1:
         {
+            
             M_examViewController * exam = [[M_examViewController alloc] init];
-            [self.navigationController pushViewController:exam animated:NO];
+            [self.navigationController pushViewController:exam animated:YES];
             
         }
             break;
@@ -212,7 +226,7 @@
 }
 
 //发送验证码
--(void)reSend
+/*-(void)reSend
 {
     
     [UserName resignFirstResponder];
@@ -233,7 +247,7 @@
         [self timeFireMethod];
     }
   
-}
+}*/
 
 -(void)reg
 {
@@ -252,25 +266,19 @@
     else if(Password.text.length<6||Password.text.length>20)
     {
         msg=@"请输入6－20位密码";
-    }
-    else if([Password.text isEqualToString:confirmPassword.text]==NO)
+    }else if (email.text.length == 0)
     {
-        msg=@"密码输入不一致";
+        msg=@"请输入您的邮箱";
     }
-    else if(phoneNumber.text.length<1 || phoneNumber.text.length>11)
-    {
-        msg =@"请输入正确的手机号码";
-    }
+
 
    
     
     if ([msg isEqualToString:@"ok"]) {
        
         //zhuce
-    }
-    else
+    }else
     {
-      
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
                                                             message:msg
                                                            delegate:nil
@@ -427,9 +435,7 @@
 {
     [UserName resignFirstResponder];
     [Password resignFirstResponder];
-    [confirmPassword resignFirstResponder];
-    [phoneNumber resignFirstResponder];
-    [verCode resignFirstResponder];
+    [email resignFirstResponder];
     
 }
 
@@ -438,15 +444,11 @@
 {
     [textField resignFirstResponder];
     if (textField == UserName) {
+        [email becomeFirstResponder];
+    }else if (textField == email)
         [Password becomeFirstResponder];
-    }else if (textField == Password)
-        [confirmPassword becomeFirstResponder];
-    else if (textField == confirmPassword)
-        [phoneNumber becomeFirstResponder];
-    else if (textField == phoneNumber){
-        [textField resignFirstResponder];
-        [self reSend];
-    }
+     
+    
     return YES;
 }
 
@@ -454,14 +456,11 @@
 {
     if (textField == UserName) {
         //        [scroll setContentOffset:CGPointMake(0, 20) animated:YES];
-    }else if (textField == Password)
+    }else if (textField == email)
         [scroll setContentOffset:CGPointMake(0, 100) animated:YES];
-    else if (textField == confirmPassword)
+    else if (textField == Password)
         [scroll setContentOffset:CGPointMake(0, 150) animated:YES];
-    else if (textField == phoneNumber)
-        [scroll setContentOffset:CGPointMake(0, 200) animated:YES];
-    else if (textField == verCode)
-        [scroll setContentOffset:CGPointMake(0, 250) animated:YES];
+    
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
