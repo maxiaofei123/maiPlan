@@ -12,7 +12,8 @@
 #import "M_regViewController.h"
 
 
-@interface M_examViewController ()
+
+@interface M_examViewController ()<UIAlertViewDelegate>
 {
     NSArray *lableArr;
     UIButton * select1;
@@ -51,6 +52,7 @@
     view.backgroundColor =[UIColor colorWithPatternImage:[UIImage imageNamed:@"exam_bg.png"]];
     [self.view addSubview:view];
     lableArr = [[NSArray alloc] initWithObjects:@"全面学习模式", @"未答过题模式",@"复习错题模式",nil];
+    
     [self drawNav];
     [self drawView];
     
@@ -136,13 +138,13 @@
         [zhuce addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:zhuce];
         
-        UIButton *lost = [UIButton buttonWithType:0];
-        [lost setFrame:CGRectMake((self.view.frame.size.width-150)/2, self.view.frame.size.height-44-30, 150, 20)];
-        [lost setTitle:@"忘记密码?" forState:UIControlStateNormal];
-        [lost setBackgroundColor:[UIColor clearColor]];
-        lost.titleLabel.font = [UIFont systemFontOfSize:13.];
-      //  [lost addTarget:self action:@selector(lost) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:lost];
+//        UIButton *lost = [UIButton buttonWithType:0];
+//        [lost setFrame:CGRectMake((self.view.frame.size.width-150)/2, self.view.frame.size.height-44-30, 150, 20)];
+//        [lost setTitle:@"忘记密码?" forState:UIControlStateNormal];
+//        [lost setBackgroundColor:[UIColor clearColor]];
+//        lost.titleLabel.font = [UIFont systemFontOfSize:13.];
+//      //  [lost addTarget:self action:@selector(lost) forControlEvents:UIControlEventTouchUpInside];
+//        [self.view addSubview:lost];
     
     
 }
@@ -164,11 +166,11 @@
     title.textColor = [UIColor whiteColor];
     [view addSubview:title];
     
-//    UIButton *homeBt =[[UIButton alloc] initWithFrame:CGRectMake(13, 7, 28, 27)];
-//    [homeBt setImage:[UIImage imageNamed:@"public_home.png"] forState:UIControlStateNormal];
-//    homeBt.tag =1;
-//    [homeBt addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
-//    [view addSubview:homeBt];
+    UIButton *homeBt =[[UIButton alloc] initWithFrame:CGRectMake(13, 7, 28, 27)];
+    [homeBt setImage:[UIImage imageNamed:@"public_home.png"] forState:UIControlStateNormal];
+    homeBt.tag =1;
+    [homeBt addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:homeBt];
     
     UIButton *rButton =[[UIButton alloc] init];
     rButton =[UIButton buttonWithType:0];
@@ -187,8 +189,7 @@
     switch (sender.tag) {
         case 1:
         {
-            M_homeViewController *homeView = [[M_homeViewController alloc] init ];
-            [self.navigationController pushViewController:homeView animated:NO];
+        
         }
             break;
         case 2:
@@ -226,10 +227,11 @@
             break;
             
         case 7:
-            
-            _testView = [[Exam_testViewController alloc] init];
+        {
+                        
+             _testView = [[Exam_testViewController alloc] init];
             [self.navigationController pushViewController:_testView animated:NO];
-           
+        }
             break;
         case 8:
             {
@@ -325,6 +327,15 @@
         [M_public sendLinkContent:0];
     }else if (buttonIndex == 1){
         [M_public sendLinkContent:1];
+    }
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    if (alertView.tag ==101) {
+        if (buttonIndex ==0) {
+            
+        }
     }
 }
 

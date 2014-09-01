@@ -64,7 +64,7 @@
     
     //tabbar
     tabBar = [[UITabBarController alloc] init];
-    tabBar.viewControllers = [NSArray  arrayWithObjects:_home_Nav,_exam_Nav,_self_Nav,_message_Nav,_set_Nav, nil];
+    tabBar.viewControllers = [NSArray  arrayWithObjects:_exam_Nav,_self_Nav,_message_Nav,_set_Nav, nil];
     
     _home_Nav.tabBarItem.title = @"首页";
     _home_Nav.tabBarItem.image = [UIImage imageNamed:@"home.png"];
@@ -81,9 +81,23 @@
     _set_Nav.tabBarItem.title = @"设置";
     _set_Nav.tabBarItem.image = [UIImage imageNamed:@"set.png"];
     
-  
+//    [[UITabBarItem appearance] setTitleTextAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:11.0],
+//                                                        NSForegroundColorAttributeName : [UIColor grayColor]
+//                                                        } forState:UIControlStateSelected];
+//    
+//    [[UITabBarItem appearance] setTitleTextAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:11.0],
+//                                                        NSForegroundColorAttributeName : [UIColor whiteColor]
+//                                                        }
+//                                             forState:UIControlStateNormal];
+    
+    
+//    [[UITabBar appearance] setBackgroundImage:[[UIImage alloc]init]];
+//    [[UITabBar appearance] setShadowImage:[[UIImage alloc]init]];
+//    self.tabBar.selectionIndicatorImage = [UIImage imageWithColor:[UIColor clearColor]];
+    
     tabBar.tabBar.tintColor = [UIColor whiteColor];
     
+
     CGRect frame = CGRectMake(0, 0, 320, 49);
     UIView * v = [[UIView alloc] initWithFrame:frame];
     UIColor * color = [UIColor colorWithPatternImage:[UIImage imageNamed:@"lanDi.png"]];
@@ -120,5 +134,6 @@
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
+
 
 @end

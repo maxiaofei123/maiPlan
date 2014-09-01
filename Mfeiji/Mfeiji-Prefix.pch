@@ -20,4 +20,8 @@
     #import "WXApi.h"
     #import "WXApiObject.h"
     #import "M_public.h"
+    #import"publicRequest.h"
+    #import "MBProgressHUD.h"
+
+#import "AFNetworking.h"
 #endif

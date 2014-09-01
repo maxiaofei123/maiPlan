@@ -14,9 +14,6 @@
 {
     NSArray *lableArr;
     UINavigationBar * nav;
-
-
-
 }
 @end
 
@@ -53,7 +50,6 @@
         Lable.text = [lableArr objectAtIndex:i];
         [self.view addSubview:Lable];
     }
-
 }
 
 - (void)drawNav

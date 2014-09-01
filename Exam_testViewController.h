@@ -18,7 +18,5 @@
 @property (strong ,nonatomic)Exam_resultViewController *resultView;
 @property (atomic,assign )int returnTag;
 
--(void)choose:(UIButton *)sender;
-
 
 @end
