@@ -118,15 +118,15 @@
 //                mySwithch.isRounded = NO;
 //                [cell addSubview:mySwithch];
 //            }
-//            
+//
 //            break;
 //        case 1:
-          //  cell.textLabel.text =[nameArr objectAtIndex:row];
+//          //  cell.textLabel.text =[nameArr objectAtIndex:row];
 //            break;
 //            
 //        default:
 //            break;
-   // }
+//       }
     cell.textLabel.text =[nameArr objectAtIndex:row];
     cell.font = [UIFont systemFontOfSize:14];
     UIView *line=[[UIView alloc]initWithFrame:CGRectMake(0, 39.5, 300,0.5)];
@@ -174,10 +174,17 @@
             
             break;
         case 1://帮助和反馈
-            
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"帮助反馈" message:@"有问题或建议请发邮件至service@mfeiji.com" delegate:self cancelButtonTitle:@"好的" otherButtonTitles:nil, nil];
+            [alert show];
+        
+        }
             break;
         case 2://关于
-            
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"关于" message:@"MfeijiAPP 1.0" delegate:self cancelButtonTitle:@"好的" otherButtonTitles:nil, nil];
+            [alert show];
+        }
             break;
             
         default:
@@ -197,7 +204,7 @@
                  NSLog(@"sender on ");
             }else
             {
-            
+                
             }
             
             break;

@@ -11,7 +11,7 @@
 #import "M_homeViewController.h"
 #import "M_regViewController.h"
 
-
+static NSDictionary * dic;
 
 @interface M_examViewController ()<UIAlertViewDelegate>
 {
@@ -68,8 +68,9 @@
     [userView setUserInteractionEnabled:YES];
     [self.view addSubview:userView];
     UserName = [[UITextField alloc] initWithFrame:CGRectMake(40, 0, 170, 50)];
-    UserName.placeholder = @"请输入用户名";
+    UserName.placeholder = @"输入用户名/邮箱";
     UserName.delegate =self;
+    UserName.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"username"];
     UserName.font = [UIFont systemFontOfSize:16];
     UserName.textColor = [UIColor whiteColor];
     [userView addSubview:UserName];
@@ -88,41 +89,11 @@
     Password.textColor = [UIColor whiteColor];
     [pwdView addSubview:Password];
     
-    //  selectButton
-    
-//    select1 = [[UIButton alloc] initWithFrame:CGRectMake(100, 220, 20, 20)];
-//    [select1 setImage:[UIImage imageNamed:@"exam_circle.png"] forState:UIControlStateNormal];
-//    [select1 setImage:[UIImage imageNamed:@"exam_circle1.png"] forState:UIControlStateSelected];
-//    select1.tag = 3;
-//    [select1 addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
-//    select1.selected = YES;
-//    [self.view addSubview:select1];
-//    
-//    select2 = [[UIButton alloc] initWithFrame:CGRectMake(100, 240, 20, 20)];
-//    [select2 setImage:[UIImage imageNamed:@"exam_circle.png"] forState:UIControlStateNormal];
-//    [select2 setImage:[UIImage imageNamed:@"exam_circle1.png"] forState:UIControlStateSelected];
-//    select2.tag = 4;
-//    [select2 addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:select2];
-//    
-//    select3 = [[UIButton alloc] initWithFrame:CGRectMake(100, 260, 20, 20)];
-//    [select3 setImage:[UIImage imageNamed:@"exam_circle.png"] forState:UIControlStateNormal];
-//    [select3 setImage:[UIImage imageNamed:@"exam_circle1.png"] forState:UIControlStateSelected];
-//    select3.tag = 5;
-//    [select3 addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:select3];
-    
-//    for (int i =0; i<3; i++) {
-//        UILabel *lableName = [[UILabel alloc] initWithFrame:CGRectMake(123, 223+i*20, 200, 15)];
-//        lableName.text = [lableArr objectAtIndex:i];
-//        lableName.textColor = [UIColor whiteColor];
-//        [self.view addSubview:lableName];
-//    }
 //---------开始考试------
         UIButton *startBt = [[UIButton alloc] initWithFrame:CGRectMake(100, 225, 130, 40)];
         [startBt setImage:[UIImage imageNamed:@"exam_start.png"] forState:UIControlStateNormal];
         startBt.tag = 6;
-        [startBt addTarget:self action:@selector(login) forControlEvents:UIControlEventTouchUpInside];
+        [startBt addTarget:self action:@selector(pangdan) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:startBt];
  //------不登陆直接考试--
         UIButton *noLogin = [[UIButton alloc] initWithFrame:CGRectMake(100, 305, 130, 40)];
@@ -137,15 +108,6 @@
         zhuce.tag = 8;
         [zhuce addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:zhuce];
-        
-//        UIButton *lost = [UIButton buttonWithType:0];
-//        [lost setFrame:CGRectMake((self.view.frame.size.width-150)/2, self.view.frame.size.height-44-30, 150, 20)];
-//        [lost setTitle:@"忘记密码?" forState:UIControlStateNormal];
-//        [lost setBackgroundColor:[UIColor clearColor]];
-//        lost.titleLabel.font = [UIFont systemFontOfSize:13.];
-//      //  [lost addTarget:self action:@selector(lost) forControlEvents:UIControlEventTouchUpInside];
-//        [self.view addSubview:lost];
-    
     
 }
 
@@ -181,8 +143,6 @@
     [view addSubview:rButton];
 
 }
-
-
 
 -(void)choose:(UIButton *)sender
 {
@@ -250,6 +210,30 @@
 }
 
 //登陆成功后进入考试界面
+-(void)pangdan
+{
+
+    NSString * to =[[NSString alloc] initWithFormat:@"%@", [[NSUserDefaults standardUserDefaults] objectForKey:@"auth_token"]];
+    NSString * userid = [[NSString alloc] initWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]];
+    if (to.length>0 && userid.length >0) {
+        //进入考试
+        _testView = [[Exam_testViewController alloc] init];
+        [self.navigationController pushViewController:_testView animated:NO];
+        
+    }else{
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                            message:@"您还没有登陆，请先登录"
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"确定"
+                                                  otherButtonTitles:@"返回",nil];
+        alertView.tag =1009;
+        [alertView show];
+    }
+
+}
+
+
 -(void)login
 {
     NSString * msg = @"ok";
@@ -262,7 +246,39 @@
     
     }
     
-    if (![msg isEqualToString:@"ok"]) {
+    if ([msg isEqualToString:@"ok"]) {
+    
+        NSDictionary * dic =[[NSDictionary alloc] initWithObjectsAndKeys:UserName.text,@"user[login]",Password.text,@"user[password]", nil];
+        
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        [manager POST:[NSString stringWithFormat:@"http://42.120.9.87:4010/api/user_tokens/"] parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSDictionary * res =[[NSDictionary alloc] init];
+            res = [responseObject objectForKey:@"user_token"];
+            NSLog(@"res =%@",res);
+            [[NSUserDefaults standardUserDefaults] setObject:[res objectForKey:@"token"] forKey:@"auth_token"];
+            [[NSUserDefaults standardUserDefaults] setObject:[res objectForKey:@"user_id"] forKey:@"userId"];
+            
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                                message:@"登陆成功"
+                                                               delegate:self
+                                                      cancelButtonTitle:@"进去答题"
+                                                      otherButtonTitles:@"返回",nil];
+            alertView.tag = 1001;
+            [alertView show];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"error=%@",error);
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                                message:@"登陆失败 ,请检查网络"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"确定"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+        }];
+    
+    }
+    else{
+
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
                                                             message:msg
                                                            delegate:nil
@@ -270,7 +286,28 @@
                                                   otherButtonTitles:nil];
         [alertView show];
     }
+    
 
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"ale%d    %d",alertView.tag,buttonIndex);
+    if (alertView.tag ==1001) {
+        if (buttonIndex ==0) {
+            //进入考试
+            _testView = [[Exam_testViewController alloc] init];
+            [self.navigationController pushViewController:_testView animated:NO];
+           
+        }
+        
+    }
+    else if(alertView.tag ==1009)
+    {
+        if (buttonIndex ==0) {
+            [self login];
+        }
+    }
 }
 
 //........
@@ -330,14 +367,6 @@
     }
 }
 
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    
-    if (alertView.tag ==101) {
-        if (buttonIndex ==0) {
-            
-        }
-    }
-}
 
 - (void)didReceiveMemoryWarning
 {

@@ -12,4 +12,9 @@
 @interface Exam_resultViewController : UIViewController
 
 @property (strong ,nonatomic) M_examViewController *examView;
+@property (nonatomic) int useTime;
+@property (nonatomic) int useSec;
+@property (nonatomic) float  resultScore;
+@property (strong ,nonatomic)NSDictionary *checkDic;
+@property (strong,nonatomic)NSDictionary *zhuangtai;
 @end

@@ -8,17 +8,32 @@
 
 #import "M_selfViewController.h"
 #import "self_setPageViewController.h"
+#import "ImageSizeManager.h"
 
-@interface M_selfViewController ()
+@interface M_selfViewController ()<UIScrollViewDelegate,UITextFieldDelegate>
 {
     NSArray *nameArr;
     UIImageView *headView;
+    
+    NSMutableArray *textFileArr;
+    int textId;
+    
+    NSMutableDictionary * tefileDic;
+    
+    UITextField *nameText;
+    UITextField *granderText;
+    UITextField *phoneText;
+    UITextField *schoolText;
+    
+    MBProgressHUD *mb;
+    
+ 
 }
 
 @end
 
 @implementation M_selfViewController
-@synthesize tableView;
+@synthesize MtableView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -37,66 +52,147 @@
     UIView * view = [[UIView alloc] initWithFrame:CGRectMake(0, 20, 320, self.view.frame.size.height-20)];
     view.backgroundColor =[UIColor colorWithPatternImage:[UIImage imageNamed:@"hui_bg.png"]];
     [self.view addSubview:view];
-    
+    textId =0;
     nameArr = [[NSArray alloc] initWithObjects:@"昵称:",@"性别:",@"手机:",@"航校:", nil];
+    textFileArr = [[NSMutableArray alloc] init];
     
+    MtableView = [[UITableView alloc] initWithFrame:CGRectMake(10, 64, 300, self.view.frame.size.height-100-64)style:UITableViewStyleGrouped];
+    
+    MtableView.delegate =self;
+    MtableView.dataSource =self;
+    MtableView.backgroundColor = [UIColor clearColor];
+    MtableView.scrollEnabled = NO;
+    [self.view addSubview:MtableView];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
+        self.MtableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    }
+    
+    UITapGestureRecognizer *textFeild = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(textFieldEditing)];
+    [MtableView addGestureRecognizer:textFeild];
+    
+    UIButton *commit =[UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [commit setFrame:CGRectMake((self.view.frame.size.width-100)/2, self.view.frame.size.height-44-40, 100, 30)];
+    [commit setTitle:@"保存修改" forState:UIControlStateNormal];
+    [commit setTitle:@"保存修改" forState:UIControlStateSelected];
+    [commit setBackgroundColor:[UIColor colorWithRed:201/255. green:201/255. blue:201/255. alpha:1.]];
+    [commit setTintColor:[UIColor whiteColor]];
+    [commit.layer setCornerRadius:8.0];
+    commit.titleLabel.font = [UIFont systemFontOfSize:14.];
+    [commit addTarget:self action:@selector(commitUser) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:commit];
+    
+
     [self drawNav];
-    [self drawView];
+    [self requst];
     
+
+}
+-(void)setTextFile
+{
+    NSLog(@"user user user");
+    nameText.text = [tefileDic objectForKey:@"username"];
+    NSString * phoneStr =[NSString stringWithString:[tefileDic objectForKey:@"phone"]];
+    NSString * genderStr =[NSString stringWithString:[tefileDic objectForKey:@"gender"]];
+    NSString * schoolStr =[NSString stringWithString:[tefileDic objectForKey:@"school_name"]];
+    
+    if (genderStr.length > 0) {
+        granderText.text = genderStr;
+    }
+    if (genderStr.length > 0) {
+        phoneText.text = phoneStr;
+    }
+    if (genderStr.length > 0) {
+        schoolText.text = schoolStr;
+
+    }
+}
+
+-(void)requst
+{
+    NSString *str =[[NSString alloc] initWithFormat:@"http://42.120.9.87:4010/api/users/profile?auth_token=%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"]];
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:str parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+       NSDictionary * dic=responseObject;
+        tefileDic = [dic objectForKey:@"user"];
+        NSLog(@"%@",tefileDic);
+        
+        [self setTextFile];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    }];
+    
+}
+
+-(void)commitUser
+{
+    if (!(phoneText.text.length == 0 || phoneText.text.length ==11)) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                            message:@"请输入11位号码"
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"确定"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }else{
+        mb = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        mb.labelText = @"提交资料中...";
+
+        NSDictionary *dic = [[NSDictionary alloc]initWithObjectsAndKeys: nameText.text,@"user[username]",granderText.text,@"user[gender]",phoneText.text,@"user[phone]",schoolText.text,@"user[school_name]", UIImageJPEGRepresentation(headView.image, 1.0),@"user[avatar]",nil];
+        
+
+//        NSLog(@"dic =%@  %@",dic ,[NSString stringWithFormat:@"http://42.120.9.87:4010/api/users/auth_token=%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"]]);
+
+        NSString * userId = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        [manager PUT:[NSString stringWithFormat:@"http://42.120.9.87:4010/api/users/%@?auth_token=%@",userId,[[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"]] parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+//            NSLog(@"修改成功 ,%@",responseObject);
+            mb.labelText = @"修改成功";
+            [mb hide:YES afterDelay:2];
+            
+                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                                        message:@"保存失败,请检查网络"
+                                                                       delegate:nil
+                                                              cancelButtonTitle:@"确定"
+                                                              otherButtonTitles:nil];
+                    [alertView show];
+        }];
     }
 
--(void)drawView
-{
-//-----------------------
-    UIImageView * topView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 105, 300, 65)];
-    topView.image = [UIImage imageNamed:@"my_baidi.png"];
-    [topView setUserInteractionEnabled:YES];
-    [self.view addSubview:topView];
+}
 
-    headView = [[UIImageView alloc]initWithFrame:CGRectMake(18, 113, 50, 50)];
-    headView.image = [UIImage imageNamed:@"public_head.png"];
-    headView.userInteractionEnabled = YES;
-    [self.view addSubview:headView];
-    UITapGestureRecognizer *pass = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(upLoad)];
-    [headView addGestureRecognizer:pass];
+
+-(void)textFieldEditing
+{
+    [nameText resignFirstResponder];
+    [granderText resignFirstResponder];
+    [phoneText resignFirstResponder];
+    [schoolText resignFirstResponder];
     
-    UIButton *changeBt =[[UIButton alloc] init];
-    changeBt =[UIButton buttonWithType:0];
-    [changeBt setImage:[UIImage imageNamed:@"my_xiugai.png"] forState:UIControlStateNormal];
-    [changeBt setFrame:CGRectMake(100, 130, 60, 15)];
-    [changeBt addTarget:self action:@selector(upLoad) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:changeBt];
-    //---tableview
-    UIImageView * v= [[UIImageView alloc] initWithFrame:CGRectMake(10, 190, 300, 160)];
-    v.backgroundColor =[UIColor colorWithPatternImage:[UIImage imageNamed:@"set_shang.png"]];
-    [v setUserInteractionEnabled:YES];
-    [self.view addSubview:v];
-   tableView = [[UITableView alloc] initWithFrame:CGRectMake(10, 190, 300, 160)];
-    tableView.delegate =self;
-    tableView.dataSource =self;
-    tableView.backgroundColor = [UIColor whiteColor];
-    tableView.scrollEnabled = NO;
-    [self.view addSubview:tableView];
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    if (textField == nameText) {
+        [MtableView setContentOffset:CGPointMake(0, 44) animated:YES];
+    }
+    if (textField == granderText) {
+        [MtableView setContentOffset:CGPointMake(0, 84) animated:YES];
+    }else if (textField == phoneText)
+        [MtableView setContentOffset:CGPointMake(0, 124) animated:YES];
+    else if (textField ==schoolText)
+        [MtableView setContentOffset:CGPointMake(0, 164) animated:YES];
     
-//-----最高成绩---------------
-    UILabel *lableScore = [[UILabel alloc] initWithFrame:CGRectMake(10, 370, 100, 20)];
-    lableScore.backgroundColor = [UIColor clearColor];
-    lableScore.text = @"最高成绩";
-    lableScore.font = [UIFont systemFontOfSize:18];
-    lableScore.textColor = [UIColor blackColor];
-    [self.view addSubview:lableScore];
-    
-    UIImageView *scoreView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 400, 300, 60)];
-    scoreView.image = [UIImage imageNamed:@"my_baikuang.png"];
-    [scoreView setUserInteractionEnabled:YES];
-    [self.view addSubview:scoreView];
-    
-    UILabel *lilun = [[UILabel alloc] initWithFrame:CGRectMake(10, 17, 100, 20)];
-    lilun.text = @"私照理论:";
-    lilun.font = [UIFont systemFontOfSize:18];
-    lilun.textColor = [UIColor blackColor];
-    [scoreView addSubview:lilun];
- 
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    [MtableView setContentOffset:CGPointMake(0, 0) animated:YES];
 }
 
 - (void)drawNav
@@ -130,15 +226,85 @@
     
     if (cell ==nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:tableSampleIdentifier];
+        
     }
-    UIView *line=[[UIView alloc]initWithFrame:CGRectMake(0, 39.5, 300,0.5)];
-    line.backgroundColor=[UIColor colorWithRed:0.7 green:0.7 blue:0.77 alpha:1];
-    [tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    [cell addSubview:line];
     
-    NSInteger row = [indexPath row];
-    cell.textLabel.text =[nameArr objectAtIndex:row];
+    [cell setSelectionStyle:UITableViewCellEditingStyleNone];//取消cell点击效果
 
+   NSInteger row = [indexPath row];
+    switch (indexPath.section) {
+        case 0:
+        {
+            headView = [[UIImageView alloc]initWithFrame:CGRectMake(8, 5, 50, 50)];
+            headView.image = [UIImage imageNamed:@"public_head.png"];
+            headView.userInteractionEnabled = YES;
+            [cell addSubview:headView];
+            
+            UITapGestureRecognizer *pass = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(upLoad)];
+            [headView addGestureRecognizer:pass];
+            
+            UIButton *changeBt =[[UIButton alloc] init];
+            changeBt =[UIButton buttonWithType:0];
+            [changeBt setImage:[UIImage imageNamed:@"my_xiugai.png"] forState:UIControlStateNormal];
+            [changeBt setFrame:CGRectMake(100, 22, 60, 15)];
+            [changeBt addTarget:self action:@selector(upLoad) forControlEvents:UIControlEventTouchUpInside];
+            [cell addSubview:changeBt];
+
+        }
+            break;
+        case 1:
+        {
+            cell.textLabel.text =[nameArr objectAtIndex:row];
+            
+            if (indexPath.row ==0) {
+                nameText = [[UITextField alloc] initWithFrame:CGRectMake(65, 5, 200, 30)];
+                nameText.textColor = [UIColor blackColor];
+                nameText.font =[UIFont systemFontOfSize:16];
+                nameText.tag = indexPath.row;
+                nameText.delegate =self;
+                [cell addSubview:nameText];
+            }else if(indexPath.row ==1)
+            {
+                granderText = [[UITextField alloc] initWithFrame:CGRectMake(65, 5, 200, 30)];
+                granderText.textColor = [UIColor blackColor];
+                granderText.font =[UIFont systemFontOfSize:16];
+                granderText.tag = indexPath.row;
+                granderText.delegate =self;
+                [cell addSubview:granderText];
+            }
+            else if(indexPath.row ==2)
+            {
+                phoneText = [[UITextField alloc] initWithFrame:CGRectMake(65, 5, 200, 30)];
+                phoneText.textColor = [UIColor blackColor];
+                phoneText.font =[UIFont systemFontOfSize:16];
+                phoneText.keyboardType = UIKeyboardTypeNumberPad;
+                phoneText.tag = indexPath.row;
+                phoneText.delegate =self;
+                [cell addSubview:phoneText];
+            }
+            else if(indexPath.row ==3)
+            {
+                schoolText = [[UITextField alloc] initWithFrame:CGRectMake(65, 5, 200, 30)];
+                schoolText.textColor = [UIColor blackColor];
+                schoolText.font =[UIFont systemFontOfSize:16];
+                schoolText.tag = indexPath.row;
+                schoolText.delegate =self;
+                [cell addSubview:schoolText];
+            }
+
+            
+        }
+            break;
+        case 2:
+            cell.textLabel.text =@"私照理论 :";
+            cell.textLabel.font = [UIFont systemFontOfSize:16];
+            break;
+            
+        default:
+            break;
+    }
+    
+    
     return cell;
     
 }
@@ -151,15 +317,49 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if(indexPath.section==0)
+        return 60;
+    else if(indexPath.section == 1)
     return 40.0f;
+    else if(indexPath.section ==2)
+        return 60;
+    
+    return 40;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (section ==0 ||section ==2) {
+        return 1;
+    }else if(section ==1){
+        return 4;
+    }
 
     return 4;
     
 }
+
+
+-(UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    
+    UILabel *headerLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 38)];
+    if (section == 2) {
+        headerLabel.text = @"最高成绩";
+    }
+    
+    [headerLabel setFont:[UIFont systemFontOfSize:16.0]];
+    [headerLabel setTextColor:[UIColor blackColor]];
+    [headerLabel setBackgroundColor:[UIColor clearColor]];
+    return headerLabel;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 3;
+}
+
+
+#pragma mark -upPhoto
 
 //  选择头像来源
 - (void)upLoad
@@ -214,61 +414,13 @@
     
 }
 
-#pragma 拍照选择照片协议方法
--(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    
-    [UIApplication sharedApplication].statusBarHidden = NO;
-    
-    NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
-    
-    NSData *data;
-    
-    if ([mediaType isEqualToString:@"public.image"]){
-        
-        //切忌不可直接使用originImage，因为这是没有经过格式化的图片数据，可能会导致选择的图片颠倒或是失真等现象的发生，从UIImagePickerControllerOriginalImage中的Origin可以看出，很原始，哈哈
-        UIImage *originImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-        
-        //图片压缩，因为原图都是很大的，不必要传原图
-        UIImage *scaleImage = [self scaleImage:originImage toScale:0.3];
-        
-        //以下这两步都是比较耗时的操作，最好开一个HUD提示用户，这样体验会好些，不至于阻塞界面
-        if (UIImagePNGRepresentation(scaleImage) == nil) {
-            //将图片转换为JPG格式的二进制数据
-            data = UIImageJPEGRepresentation(scaleImage, 1);
-        } else {
-            //将图片转换为PNG格式的二进制数据
-            data = UIImagePNGRepresentation(scaleImage);
-        }
-        
-        //        //将二进制数据生成UIImage
-        //        UIImage *image = [UIImage imageWithData:data];
-        //
-        //        //将图片传递给截取界面进行截取并设置回调方法（协议）
-        //        headView.image = image;
-        //        //隐藏UIImagePickerController本身的导航栏
-        //        image.navigationBar.hidden = YES;
-        //        [picker pushViewController:captureView animated:YES];
-        
-    }
+    UIImage *image2 = [ImageSizeManager getMaxImageWithOldImage:info[UIImagePickerControllerEditedImage]];
+    [picker dismissViewControllerAnimated:YES completion:^{
+        headView.image = image2;
+    }];
 }
-
-#pragma mark - 图片回传协议方法
--(void)passImage:(UIImage *)image
-{
-    headView.image = image;
-}
-
-#pragma mark- 缩放图片
--(UIImage *)scaleImage:(UIImage *)image toScale:(float)scaleSize
-{
-    UIGraphicsBeginImageContext(CGSizeMake(image.size.width*scaleSize,image.size.height*scaleSize));
-    [image drawInRect:CGRectMake(0, 0, image.size.width * scaleSize, image.size.height *scaleSize)];
-    UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return scaledImage;
-}
-
 
 
 - (void)didReceiveMemoryWarning

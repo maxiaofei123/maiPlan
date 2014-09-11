@@ -18,5 +18,7 @@
 @property (strong ,nonatomic)Exam_resultViewController *resultView;
 @property (atomic,assign )int returnTag;
 
+-(void)setQuestion:(int)number;
+
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "M_messageViewController.h"
+#import "M_examViewController.h"
 
 @interface M_messageViewController ()<UIAlertViewDelegate>
 {
@@ -47,6 +48,7 @@
 {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"此项功能暂时关闭" delegate:self cancelButtonTitle:@"cancel" otherButtonTitles:@"确定", nil];
     [alert show];
+    
 }
 
 - (void)drawNav

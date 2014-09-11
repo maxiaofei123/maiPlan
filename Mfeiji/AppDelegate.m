@@ -81,19 +81,6 @@
     _set_Nav.tabBarItem.title = @"设置";
     _set_Nav.tabBarItem.image = [UIImage imageNamed:@"set.png"];
     
-//    [[UITabBarItem appearance] setTitleTextAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:11.0],
-//                                                        NSForegroundColorAttributeName : [UIColor grayColor]
-//                                                        } forState:UIControlStateSelected];
-//    
-//    [[UITabBarItem appearance] setTitleTextAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:11.0],
-//                                                        NSForegroundColorAttributeName : [UIColor whiteColor]
-//                                                        }
-//                                             forState:UIControlStateNormal];
-    
-    
-//    [[UITabBar appearance] setBackgroundImage:[[UIImage alloc]init]];
-//    [[UITabBar appearance] setShadowImage:[[UIImage alloc]init]];
-//    self.tabBar.selectionIndicatorImage = [UIImage imageWithColor:[UIColor clearColor]];
     
     tabBar.tabBar.tintColor = [UIColor whiteColor];
     
@@ -107,6 +94,7 @@
 
 
 }
+
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {

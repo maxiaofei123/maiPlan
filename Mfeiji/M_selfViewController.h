@@ -10,5 +10,5 @@
 
 @interface M_selfViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIImagePickerControllerDelegate,UIActionSheetDelegate>
 
-@property (strong ,nonatomic)UITableView * tableView;
+@property (strong ,nonatomic)UITableView * MtableView;
 @end

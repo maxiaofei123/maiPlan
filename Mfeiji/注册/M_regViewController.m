@@ -27,6 +27,8 @@
     
     
     NSArray *nameArr;
+    
+    MBProgressHUD *mb;
 }
 
 @end
@@ -277,6 +279,35 @@
     if ([msg isEqualToString:@"ok"]) {
        
         //zhuce
+        mb = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        mb.labelText = @"注册中...";
+
+        NSDictionary * dic =[[NSDictionary alloc] initWithObjectsAndKeys:UserName.text,@"user[username]",Password.text,@"user[password]",email.text,@"user[email]", nil];
+        
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        [manager POST:[NSString stringWithFormat:@"http://42.120.9.87:4010/api/users/"] parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            [mb hide:YES];
+            NSDictionary * res =[[NSDictionary alloc] init];
+            res = responseObject;
+            NSLog(@"res =%@",responseObject);
+            [[NSUserDefaults standardUserDefaults] setObject:UserName.text forKey:@"username"];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                                message:@"注册成功"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"确定"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            [mb hide:YES];
+            NSLog(@"error=%@",error);
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                                message:@"注册失败"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"确定"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+        }];
     }else
     {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
@@ -286,6 +317,7 @@
                                                   otherButtonTitles:nil];
         [alertView show];
     }
+    
     
 }
 
