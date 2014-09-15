@@ -7,7 +7,6 @@
 //
 
 #import "M_selfViewController.h"
-#import "self_setPageViewController.h"
 #import "ImageSizeManager.h"
 
 @interface M_selfViewController ()<UIScrollViewDelegate,UITextFieldDelegate>
@@ -25,7 +24,11 @@
     UITextField *phoneText;
     UITextField *schoolText;
     
+    UILabel * scoreLable;
+    
     MBProgressHUD *mb;
+    
+    int will;
     
  
 }
@@ -44,9 +47,19 @@
     return self;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+
+{   if(will == 10)
+    {
+        [self requst];
+    }
+    will = 10;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+     will =9;
     self.navigationController.navigationBarHidden = YES;
     self.view.backgroundColor = [UIColor blackColor];
     UIView * view = [[UIView alloc] initWithFrame:CGRectMake(0, 20, 320, self.view.frame.size.height-20)];
@@ -80,91 +93,127 @@
     commit.titleLabel.font = [UIFont systemFontOfSize:14.];
     [commit addTarget:self action:@selector(commitUser) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:commit];
-    
 
     [self drawNav];
     [self requst];
+   
     
 
 }
 -(void)setTextFile
 {
-    NSLog(@"user user user");
-    nameText.text = [tefileDic objectForKey:@"username"];
-    NSString * phoneStr =[NSString stringWithString:[tefileDic objectForKey:@"phone"]];
-    NSString * genderStr =[NSString stringWithString:[tefileDic objectForKey:@"gender"]];
-    NSString * schoolStr =[NSString stringWithString:[tefileDic objectForKey:@"school_name"]];
-    
-    if (genderStr.length > 0) {
-        granderText.text = genderStr;
-    }
-    if (genderStr.length > 0) {
-        phoneText.text = phoneStr;
-    }
-    if (genderStr.length > 0) {
-        schoolText.text = schoolStr;
+  if ([[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"] ==NULL) {
+      
+    }else{
 
+        NSLog(@"user user user");
+        NSString * nameStr = [NSString stringWithFormat:@"%@",[tefileDic objectForKey:@"username"]];
+        NSString * phoneStr =[NSString stringWithFormat:@"%@",[tefileDic objectForKey:@"phone"]];
+        NSString * genderStr =[NSString stringWithFormat:@"%@",[tefileDic objectForKey:@"gender"]];
+        NSString * schoolStr =[NSString stringWithFormat:@"%@",[tefileDic objectForKey:@"school_name"]];
+        NSString * scorestr =[NSString stringWithFormat:@"%@",[tefileDic objectForKey:@"topscore"]];
+        
+        
+        NSLog(@"name =%@ phone =%@  grander =%@ school=%@ score=%@",nameStr,phoneStr,genderStr,schoolStr,schoolStr);
+        if (nameStr.length > 0) {
+            nameText.text = nameStr;
+        }
+        if (genderStr.length > 0) {
+            granderText.text = genderStr;
+        }
+        if (genderStr.length > 0) {
+            phoneText.text = phoneStr;
+        }
+        if (genderStr.length > 0) {
+            schoolText.text = schoolStr;
+            
+        }
+        if(scorestr.length > 0)
+        {
+        
+        }else{
+            scoreLable.text =[NSString stringWithFormat:@"%@  分",[tefileDic objectForKey:@"topscore"]];
+        }
     }
 }
 
 -(void)requst
 {
-    NSString *str =[[NSString alloc] initWithFormat:@"http://42.120.9.87:4010/api/users/profile?auth_token=%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"]];
-    
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager GET:str parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-       NSDictionary * dic=responseObject;
-        tefileDic = [dic objectForKey:@"user"];
-        NSLog(@"%@",tefileDic);
+        NSString *str =[[NSString alloc] initWithFormat:@"http://42.120.9.87:4010/api/users/profile?auth_token=%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"]];
         
-        [self setTextFile];
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    }];
-    
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        [manager GET:str parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+           NSDictionary * dic=responseObject;
+            tefileDic = [NSMutableDictionary alloc];
+             tefileDic =[dic objectForKey:@"user"];
+            NSLog(@"myself =%@",tefileDic);
+            [self setTextFile];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                                message:@"获取信息失败，请检查网络"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"确定"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+            nameText.text = nil;
+            granderText.text =nil;
+            phoneText.text =nil;
+            schoolText.text = nil;
+        }];
+
 }
 
 -(void)commitUser
 {
-    if (!(phoneText.text.length == 0 || phoneText.text.length ==11)) {
+    if ([[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"] ==NULL) {
+        nameText.text = nil;
+        granderText.text =nil;
+        phoneText.text =nil;
+        schoolText.text = nil;
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                            message:@"请输入11位号码"
+                                                            message:@"您还没有登陆，请先登陆"
                                                            delegate:nil
                                                   cancelButtonTitle:@"确定"
                                                   otherButtonTitles:nil];
         [alertView show];
+
     }else{
-        mb = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        mb.labelText = @"提交资料中...";
+        if (!(phoneText.text.length == 0 || phoneText.text.length ==11)) {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                                message:@"请输入11位号码"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"确定"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+        }else{
+            mb = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            mb.labelText = @"提交资料中...";
 
-        NSDictionary *dic = [[NSDictionary alloc]initWithObjectsAndKeys: nameText.text,@"user[username]",granderText.text,@"user[gender]",phoneText.text,@"user[phone]",schoolText.text,@"user[school_name]", UIImageJPEGRepresentation(headView.image, 1.0),@"user[avatar]",nil];
-        
+            NSDictionary *dic = [[NSDictionary alloc]initWithObjectsAndKeys: nameText.text,@"user[username]",granderText.text,@"user[gender]",phoneText.text,@"user[phone]",schoolText.text,@"user[school_name]", UIImageJPEGRepresentation(headView.image, 1.0),@"user[avatar]",nil];
 
-//        NSLog(@"dic =%@  %@",dic ,[NSString stringWithFormat:@"http://42.120.9.87:4010/api/users/auth_token=%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"]]);
-
-        NSString * userId = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager PUT:[NSString stringWithFormat:@"http://42.120.9.87:4010/api/users/%@?auth_token=%@",userId,[[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"]] parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            
-//            NSLog(@"修改成功 ,%@",responseObject);
-            mb.labelText = @"修改成功";
-            [mb hide:YES afterDelay:2];
-            
-                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                                        message:@"保存失败,请检查网络"
-                                                                       delegate:nil
-                                                              cancelButtonTitle:@"确定"
-                                                              otherButtonTitles:nil];
-                    [alertView show];
-        }];
+            NSString * userId = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
+            AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+            [manager PUT:[NSString stringWithFormat:@"http://42.120.9.87:4010/api/users/%@?auth_token=%@",userId,[[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"]] parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                
+                mb.labelText = @"修改成功";
+                [mb hide:YES afterDelay:2];
+                
+                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                                            message:@"保存失败,请检查网络"
+                                                                           delegate:nil
+                                                                  cancelButtonTitle:@"确定"
+                                                                  otherButtonTitles:nil];
+                        [alertView show];
+            }];
+        }
     }
 
 }
-
 
 -(void)textFieldEditing
 {
@@ -199,13 +248,13 @@
 {
     UIView *view;
 
-    view = [[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 44)];
+    view = [[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 49)];
     view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"lanDi.png"]];
     [self.view addSubview:view];
     
     
     UILabel *title;
-    title = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, view.frame.size.width-120, 44)];
+    title = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, view.frame.size.width-120, 49)];
     
     title.backgroundColor = [UIColor clearColor];
     title.text = @"我的个人主页";
@@ -227,6 +276,13 @@
     if (cell ==nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:tableSampleIdentifier];
         
+    }
+    else
+    {
+        [cell removeFromSuperview];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:tableSampleIdentifier];
+
+    
     }
     
     [cell setSelectionStyle:UITableViewCellEditingStyleNone];//取消cell点击效果
@@ -296,8 +352,15 @@
         }
             break;
         case 2:
+        {
             cell.textLabel.text =@"私照理论 :";
             cell.textLabel.font = [UIFont systemFontOfSize:16];
+            scoreLable = [[UILabel  alloc] initWithFrame:CGRectMake(110, 16, 200, 30)];
+            scoreLable.textColor =[UIColor blackColor];
+            scoreLable.text =@"       分";
+            scoreLable.font = [UIFont systemFontOfSize:16];
+            [cell addSubview:scoreLable];
+        }
             break;
             
         default:
@@ -417,6 +480,7 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     UIImage *image2 = [ImageSizeManager getMaxImageWithOldImage:info[UIImagePickerControllerEditedImage]];
+ 
     [picker dismissViewControllerAnimated:YES completion:^{
         headView.image = image2;
     }];

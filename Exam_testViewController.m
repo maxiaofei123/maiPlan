@@ -9,13 +9,13 @@
 #import "Exam_testViewController.h"
 #import "M_homeViewController.h"
 #import "Exam_resultViewController.h"
+#import "Exam_weiZuoViewController.h"
 
-@interface Exam_testViewController ()<UIScrollViewDelegate,UIAlertViewDelegate>
+@interface Exam_testViewController ()<UIScrollViewDelegate,UIAlertViewDelegate,UIActionSheetDelegate,UITableViewDataSource,UITableViewDelegate>
 {
     NSArray * labarArr;
     NSArray *textName;
     NSArray * abcArr;
-    
     
     NSMutableDictionary *zhuangTaiDic;
     NSMutableArray *buttonArr;
@@ -24,12 +24,13 @@
     NSMutableArray *correctArr;
     NSMutableArray *wrongArr;
     NSMutableArray *daduiArr;
+    NSMutableArray *weidaArr;
+    NSMutableArray *yidaArr;
     
     NSDictionary * checkDic ;
 
     int selectTag;
     int timeDate;
-    int  textId;
     float  score;
     
     int imin ;
@@ -42,6 +43,7 @@
     UIScrollView * scrollView;
     UIImageView *subjectView;
     UIView *contentView;
+    UITableView *testTableView;
     
 
     
@@ -52,7 +54,7 @@
 @end
 
 @implementation Exam_testViewController
-@synthesize resultView,returnTag;
+@synthesize resultView,returnTag,textId;
 
 - (void)viewDidLoad
 {
@@ -70,9 +72,20 @@
     correctArr =[[NSMutableArray alloc] init];
     wrongArr = [[NSMutableArray alloc] init];
     daduiArr = [[NSMutableArray alloc] init];
+    yidaArr  = [[NSMutableArray alloc] init];
 
     textId =0;
     score  =0;
+    
+    UISwipeGestureRecognizer *recognizer;
+    recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
+    [recognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];
+    [[self view] addGestureRecognizer:recognizer];
+    
+    recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
+    [recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
+    [[self view] addGestureRecognizer:recognizer];
+
    
     [self drawNav];
     
@@ -83,6 +96,76 @@
    
 
 }
+
+-(void)handleSwipeFrom:(UISwipeGestureRecognizer *)recognizer
+{
+    
+    if(recognizer.direction==UISwipeGestureRecognizerDirectionLeft) {
+        NSLog(@"left");
+      
+        textId =textId == (textName.count-1) ? (textName.count-1) :textId + 1;
+        NSString * valueStr = [[NSString alloc] init];
+        
+        valueStr =[zhuangTaiDic objectForKey:[NSString stringWithFormat:@"%d",textId]];
+        int tag = [valueStr  intValue];
+        //            NSLog(@"ca,,,,,,,,,,,%d",valueStr.length);
+        if (!(valueStr.length ==0)) {
+            for (int i=0; i<3; i++) {
+                UIButton * bt = [buttonArr objectAtIndex:i];
+                if (i==tag) {
+                    bt.selected = YES;
+                    
+                }else
+                {
+                    bt.selected = NO;
+                    
+                }
+            }
+            
+        }
+        else{
+            for (int i=0; i<3; i++) {
+                UIButton * bt = [buttonArr objectAtIndex:i];
+                bt.selected =NO;
+            }
+        }
+        
+        [self setQuestion:textId];
+        //执行程序
+    }
+    
+    if(recognizer.direction==UISwipeGestureRecognizerDirectionRight) {
+        NSLog(@"right");
+   
+        //执行程序
+        
+        textId = textId ==0 ? 0 :textId -1;
+        NSString * valueStr = [[NSString alloc] init];
+        valueStr =[zhuangTaiDic objectForKey:[NSString stringWithFormat:@"%d",textId]];
+        int tag = [valueStr  intValue];
+        if (!(valueStr.length ==0)) {
+            for (int i=0; i<3; i++) {
+                UIButton * bt = [buttonArr objectAtIndex:i];
+                if (i==tag) {
+                    bt.selected = YES;
+                    
+                }else
+                {
+                    bt.selected = NO;
+                }
+            }
+        }else{
+            for (int i=0; i<3; i++) {
+                UIButton * bt = [buttonArr objectAtIndex:i];
+                bt.selected =NO;
+            }
+        }
+        [self setQuestion:textId];
+    }
+}
+
+
+
 -(void)requestQuestion
 {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -91,7 +174,7 @@
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         NSDictionary *dic=responseObject;
         textName=dic[@"question_group"];
-        NSLog(@"textname=%@",textName);
+//        NSLog(@"textname=%@",textName);
    //   比较每道题的答案是否为一，如果为一，则保存此序号到数组;
         for (int i=0; i< textName.count;i++) {
             for (int j=0; j<3; j++) {
@@ -124,7 +207,8 @@
 
 -(void)setQuestion:(int)number
 {
-    
+   
+    textId = number;
     if (textName.count ==0) {
         
     }else{
@@ -144,7 +228,8 @@
         anwserText = [[NSMutableArray alloc] init];
         NSArray *arr = [[NSArray alloc] init];
         arr= [[textName objectAtIndex:number] objectForKey:@"options"];
-        NSLog(@"arr =%@",arr);
+        
+        float lableH;
         for (int j= 0; j<3; j++) {
              UILabel *lable=[lableArr objectAtIndex:j];
             lable.frame = CGRectMake(80, 86+j*50, 200, 20);
@@ -175,23 +260,26 @@
             {
                 UILabel *lableb=[lableArr objectAtIndex:1];
                 lable.frame =CGRectMake(80,lableb.frame.size.height+lableb.frame.origin.y+20, 200, labelsize.height);
+                lableH =lable.frame.size.height+lable.frame.origin.y;
+                
 
             }
-            
-            if ((lable.frame.size.height+lable.frame.origin.y)>(self.view.frame.size.height -64)) {
-                scrollView.contentSize = CGSizeMake(320, (lable.frame.size.height+lable.frame.origin.y)-100-64);
+            NSLog(@"lable fram=%f",lableH+30);
+            if ((lableH+30)>410) {
+                scrollView.contentSize = CGSizeMake(320, (lable.frame.size.height+lable.frame.origin.y+15));
+                
+                NSLog(@"...............");
+        
+            }else
+            {
+                scrollView.contentSize =CGSizeMake(320,self.view.frame.size.height -109-64);
             }
-            
-            
             //设置button的 fram
             
             UIButton *cBt = [buttonArr objectAtIndex:i];
             cBt.frame = CGRectMake(40, lable.frame.origin.y-6, 30, 30);
             
         }
-        
-      
-    
     }
 }
 
@@ -225,7 +313,7 @@
                     UIButton * bt = [buttonArr objectAtIndex:i];
                     if (i==tag) {
                         bt.selected = YES;
-                       
+                        
                     }else
                     {
                         bt.selected = NO;
@@ -242,6 +330,29 @@
     
             break;
         case 7:
+        {
+            //跳转未做序号页面
+            weidaArr = [[NSMutableArray alloc] init];
+            for (int  i= 0; i<80; i++) {
+                int p =0;
+                for (int j =0; j<yidaArr.count; j++) {
+                    NSString *str =[[NSString alloc]initWithFormat:@"%@",[yidaArr objectAtIndex:j]];
+                    if ([str isEqualToString:[NSString stringWithFormat:@"%d",i]]) {
+                        p=1;
+                    }
+                }
+                if (p == 0) {
+                    [weidaArr addObject:[NSString stringWithFormat:@"%d",i]];
+                }
+               
+            }
+//                NSLog(@"weida  =%@",weidaArr);
+            Exam_weiZuoViewController * weizuo = [[Exam_weiZuoViewController alloc] init];
+            weizuo.weidaArry = weidaArr;
+            weizuo.delegate =self;
+            [self.navigationController pushViewController:weizuo animated:YES];
+            
+        }
 
             break;
         case 8:
@@ -308,6 +419,7 @@
             if (i==sender.tag) {
                 bt.selected = YES;
                 [zhuangTaiDic setObject:[NSString stringWithFormat:@"%d",i-3] forKey:[NSString stringWithFormat:@"%d",textId]];
+                [yidaArr addObject:[NSString stringWithFormat:@"%d",textId]];
             }
             else
             {
@@ -342,7 +454,7 @@
             [self drawView];
             [self setQuestion:0];
             //实现倒计时
-            timeDate =10*60;
+            timeDate =120*60;
             timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateTime) userInfo:nil repeats:YES];
         }
     }
@@ -375,16 +487,17 @@
     resultView =[[Exam_resultViewController alloc] init];
     resultView.hidesBottomBarWhenPushed = NO;
     if (isec != 0) {
-        resultView.useTime = 10-imin-1;
+        resultView.useTime = 120-imin-1;
         resultView.useSec = 60-isec ;
     }else
     {
-        resultView.useTime = 10-imin;
+        resultView.useTime = 120-imin;
         resultView.useSec = 0 ;
     }
    
     resultView.resultScore = score;
     resultView.checkDic =checkDic;
+    resultView.zhuangtai = zhuangTaiDic;
     [self.navigationController pushViewController:resultView animated:NO];
 
 }
@@ -510,15 +623,15 @@
 - (void)drawNav
 {
    static UIView *view;
-    view = [[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 44)];
+    view = [[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 49)];
     view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"lanDi.png"]];
     [self.view addSubview:view];
     
     
     UILabel *title;
-    title = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, view.frame.size.width-120, 44)];
+    title = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, view.frame.size.width-120, 49)];
     title.backgroundColor = [UIColor clearColor];
-    title.text = @"利用飞行器理论考试";
+    title.text = @"私用飞行器理论考试";
     title.font = [UIFont boldSystemFontOfSize:18.f];
     title.textAlignment = NSTextAlignmentCenter;
     title.textColor = [UIColor whiteColor];
@@ -527,7 +640,7 @@
     UIButton *lButton =[[UIButton alloc] init];
     lButton =[UIButton buttonWithType:0];
     [lButton setImage:[UIImage imageNamed:@"public_home.png"] forState:UIControlStateNormal];
-    [lButton setFrame:CGRectMake(5, 7, 30, 30)];
+    [lButton setFrame:CGRectMake(5, 10, 30, 30)];
     lButton.tag = 1;
     [lButton addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:lButton];
@@ -535,13 +648,13 @@
     UIButton *rButton =[[UIButton alloc] init];
     rButton =[UIButton buttonWithType:0];
     [rButton setImage:[UIImage imageNamed:@"topR.png"] forState:UIControlStateNormal];
-    [rButton setFrame:CGRectMake(275, 7, 30, 30)];
+    [rButton setFrame:CGRectMake(275, 10, 30, 30)];
     rButton.tag = 2;
     [rButton addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:rButton];
     
     
-    UIImageView * topView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 60, 320, 40)];
+    UIImageView * topView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 64, 320, 40)];
     topView.image = [UIImage imageNamed:@"test_lan.png"];
     [self.view addSubview:topView];
     //---------lable---
@@ -560,11 +673,11 @@
     
     
     //---------考试题目---------
-    scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 100, 320, self.view.frame.size.height -100-64)];
+    scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 109, 320, self.view.frame.size.height -109-64)];
     [scrollView setUserInteractionEnabled:YES];
     scrollView.backgroundColor = [UIColor clearColor];
     scrollView.delegate =self;
-    scrollView.contentSize = CGSizeMake(320,self.view.frame.size.height -100-64);
+    scrollView.contentSize = CGSizeMake(320,self.view.frame.size.height -109-64);
     [self.view addSubview:scrollView];
     
     

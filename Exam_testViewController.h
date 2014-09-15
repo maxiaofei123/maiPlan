@@ -7,18 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Exam_weiZuoViewController.h"
+#import "viewDelegate.h"
 
 @class M_homeViewController;
 @class Exam_resultViewController;
 
-@interface Exam_testViewController : UIViewController
+@interface Exam_testViewController : UIViewController<viewDelegate>
 
 
 @property (strong , nonatomic)  M_homeViewController *home;
 @property (strong ,nonatomic)Exam_resultViewController *resultView;
 @property (atomic,assign )int returnTag;
-
--(void)setQuestion:(int)number;
-
+@property (nonatomic)int textId;
 
 @end
+

@@ -20,9 +20,9 @@
 		</dict>
 	</dict>
 	<key>CFBundleIdentifier</key>
-	<string>com.exhibition.ideer</string>
+	<string>com.LianYi.Mfj</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
+	<string>1.0</string>
 	<key>CFBundleName</key>
 	<string>麦飞机</string>
 	<key>CFBundlePackageType</key>
@@ -32,11 +32,11 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>10</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchImageFile~iphone</key>
-	<string>Default1</string>
+	<string></string>
 	<key>UILaunchImages</key>
 	<array>
 		<dict>
@@ -73,6 +73,12 @@
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
+	</array>
+	<key>UIStatusBarHidden</key>
+	<true/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>

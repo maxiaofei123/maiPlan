@@ -21,7 +21,7 @@
 @end
 
 @implementation Exam_resultViewController
-@synthesize useTime , resultScore,useSec ,checkDic;
+@synthesize useTime , resultScore,useSec ,checkDic,zhuangtai;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -84,11 +84,11 @@
 - (void)drawNav
 {
     static UIView *view;
-    view = [[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 44)];
+    view = [[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 49)];
     view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"lanDi.png"]];
     [self.view addSubview:view];
     
-    UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, view.frame.size.width-120, 44)];
+    UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, view.frame.size.width-120, 49)];
     title.backgroundColor = [UIColor clearColor];
     title.text = @"考试结果";
     title.font = [UIFont boldSystemFontOfSize:18.f];
@@ -100,7 +100,7 @@
     UIButton *lButton =[[UIButton alloc] init];
     lButton =[UIButton buttonWithType:0];
     [lButton setImage:[UIImage imageNamed:@"result_tuichu.png"] forState:UIControlStateNormal];
-    [lButton setFrame:CGRectMake(10, 6, 30, 30)];
+    [lButton setFrame:CGRectMake(10, 9, 30, 30)];
     lButton.tag = 1;
     [lButton addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:lButton];
@@ -179,6 +179,7 @@
         {//查看答案
             Exam_checkViewController *check = [[Exam_checkViewController alloc] init];
             check.wrDic =checkDic;
+            check.zhuangtaiDic =zhuangtai;
             [self.navigationController pushViewController:check animated:YES];
         }
             break;

@@ -65,14 +65,14 @@
 - (void)drawNav
 {
     static UIView *view;
-    view = [[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 44)];
+    view = [[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 49)];
     view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"lanDi.png"]];
     
     [self.view addSubview:view];
     
     
     UILabel *title;
-    title = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, view.frame.size.width-120, 44)];
+    title = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, view.frame.size.width-120, 49)];
     
     title.backgroundColor = [UIColor clearColor];
     title.text = titleStr;

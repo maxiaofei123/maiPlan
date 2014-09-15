@@ -14,10 +14,10 @@
     NSArray * textName;
     UILabel *testLable;
     UILabel *anwserLable;
-    int  textId;
     
     NSArray * qusetionAnwser;
     NSArray * abcArr;
+    UILabel *lableNameId ;
     
     NSDictionary * zhuangtaiDic;
     NSMutableArray *anwserText;
@@ -31,7 +31,7 @@
 
 @implementation Exam_showAnswerViewController
 
-@synthesize showDic;
+@synthesize showDic , textId;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -50,10 +50,20 @@
     view.backgroundColor =[UIColor colorWithPatternImage:[UIImage imageNamed:@"hui_bg.png"]];
     [self.view addSubview:view];
 
-    textName = [[NSArray alloc] initWithObjects:[showDic objectForKey:@"textName"], nil];
-    zhuangtaiDic = [[NSDictionary alloc]initWithDictionary:[showDic objectForKey:@"zhuangtai"]];
-    qusetionAnwser = [[NSArray alloc] initWithObjects:[showDic objectForKey:@"answer"], nil];
+    textName = [showDic objectForKey:@"textName"];
+    zhuangtaiDic = _ztDic;
+    qusetionAnwser = [showDic objectForKey:@"answer"];
     abcArr = [[NSArray alloc] initWithObjects:@"A、",@"B、",@"C、", nil];
+    
+    UISwipeGestureRecognizer *recognizer;
+    recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
+    [recognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];
+    [[self view] addGestureRecognizer:recognizer];
+    
+    recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
+    [recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
+    [[self view] addGestureRecognizer:recognizer];
+    
 
     
     [self drawNav];
@@ -62,13 +72,130 @@
 }
 
 
--(void)setQuestion:(int)number
+-(void)handleSwipeFrom:(UISwipeGestureRecognizer *)recognizer
 {
     
+    if(recognizer.direction==UISwipeGestureRecognizerDirectionLeft) {
+        NSLog(@"left");
+        
+        textId =textId == (textName.count-1) ? (textName.count-1) :textId + 1;
+        NSString * valueStr = [[NSString alloc] init];
+        
+        valueStr =[zhuangtaiDic objectForKey:[NSString stringWithFormat:@"%d",textId]];
+        int tag = [valueStr  intValue];
+        //            NSLog(@"ca,,,,,,,,,,,%d",valueStr.length);
+        if (!(valueStr.length ==0)) {
+            for (int i=0; i<3; i++) {
+                UIButton * bt = [buttonArr objectAtIndex:i];
+                if (i==tag) {
+                    bt.selected = YES;
+                    
+                }else
+                {
+                    bt.selected = NO;
+                    
+                }
+            }
+            
+        }
+        else{
+            for (int i=0; i<3; i++) {
+                UIButton * bt = [buttonArr objectAtIndex:i];
+                bt.selected =NO;
+            }
+        }
+        
+        [self setQuestion:textId];
+        //执行程序
+    }
+    
+    if(recognizer.direction==UISwipeGestureRecognizerDirectionRight) {
+        NSLog(@"right");
+        
+        //执行程序
+        
+        textId = textId ==0 ? 0 :textId -1;
+        NSString * valueStr = [[NSString alloc] init];
+        valueStr =[zhuangtaiDic objectForKey:[NSString stringWithFormat:@"%d",textId]];
+        int tag = [valueStr  intValue];
+        if (!(valueStr.length ==0)) {
+            for (int i=0; i<3; i++) {
+                UIButton * bt = [buttonArr objectAtIndex:i];
+                if (i==tag) {
+                    bt.selected = YES;
+                    
+                }else
+                {
+                    bt.selected = NO;
+                }
+            }
+        }else{
+            for (int i=0; i<3; i++) {
+                UIButton * bt = [buttonArr objectAtIndex:i];
+                bt.selected =NO;
+            }
+        }
+        [self setQuestion:textId];
+    }
+}
+
+
+-(void)setQuestion:(int)number
+{
+    lableNameId.text = [NSString stringWithFormat:@"%d / 80 ",textId+1];
+    
+    //设置之前的选中状态
+    NSString * valueStr = [[NSString alloc] init];
+    valueStr =[zhuangtaiDic objectForKey:[NSString stringWithFormat:@"%d",number]];
+    int tag = [valueStr  intValue];
+    
+    NSString *queStr =[qusetionAnwser objectAtIndex:number];//此试题的答案序号
+    int queValue = [queStr intValue];
+    NSLog(@"quevalue =%d",queValue);
+    for (int k =0; k<3; k++) {
+        UILabel * lb = [lableArr objectAtIndex:k];
+        lb.textColor = [UIColor blackColor];
+        if (queValue == k) {
+            lb.textColor = [UIColor greenColor];
+        }
+        else if (tag == k) {
+            
+          if (!(queValue == tag)) {
+
+            }
+         }
+         else
+         {
+            lb.textColor =[UIColor blackColor];
+        }
+        
+    }
+    
+    if (valueStr.length >0 ) {//此处判断选择的选项如果错误显示红色
+        for (int i=0; i<3; i++) {
+            UIButton * bt = [buttonArr objectAtIndex:i];
+            UILabel * lab = [lableArr objectAtIndex:i];
+            if (i==tag) {
+                bt.selected = YES;
+                
+                if (tag != queValue) {
+                    
+                    lab.textColor = [UIColor redColor];
+                }
+
+            }else
+            {
+                bt.selected = NO;
+            }
+        }
+    }
+    
+    
+//现实题目
     if (textName.count ==0) {
         
     }else{
-        
+
         NSString * examStr = [[NSString alloc] init];
         examStr = [[textName objectAtIndex:number] objectForKey:@"subject"];
         UIFont *font = [UIFont systemFontOfSize:18.0];
@@ -84,7 +211,8 @@
         anwserText = [[NSMutableArray alloc] init];
         NSArray *arr = [[NSArray alloc] init];
         arr= [[textName objectAtIndex:number] objectForKey:@"options"];
-        NSLog(@"arr =%@",arr);
+        //初始化scrollview的fram
+        scrollView.frame =CGRectMake(0, 100, 320, self.view.frame.size.height -100-64);
         for (int j= 0; j<3; j++) {
             UILabel *lable=[lableArr objectAtIndex:j];
             lable.frame = CGRectMake(80, 86+j*50, 200, 20);
@@ -93,7 +221,6 @@
             [anwserText addObject:[[arr objectAtIndex:i] objectForKey:@"content"]];
             UILabel *lable=[lableArr objectAtIndex:i];
             lable.text =[NSString stringWithFormat:@"%@ %@",[abcArr objectAtIndex:i],[anwserText objectAtIndex:i]];
-            
             //适应高度
             UIFont *font = [UIFont systemFontOfSize:16.0];
             CGSize size = CGSizeMake(200, 2000);
@@ -117,24 +244,23 @@
                 lable.frame =CGRectMake(80,lableb.frame.size.height+lableb.frame.origin.y+20, 200, labelsize.height);
                 
             }
-            
-            if ((lable.frame.size.height+lable.frame.origin.y)>(self.view.frame.size.height -64)) {
-                scrollView.contentSize = CGSizeMake(320, (lable.frame.size.height+lable.frame.origin.y)-100-64);
+            NSLog(@"fram   %f",lable.frame.size.height+lable.frame.origin.y+20);
+            if ((lable.frame.size.height+lable.frame.origin.y+30)>410) {
+                scrollView.contentSize = CGSizeMake(320, (lable.frame.size.height+lable.frame.origin.y+15));
+                
+                NSLog(@"...............");
+                
+            }else
+            {
+                scrollView.contentSize =CGSizeMake(320,self.view.frame.size.height -109-64);
             }
             
-            
             //设置button的 fram
-            
             UIButton *cBt = [buttonArr objectAtIndex:i];
             cBt.frame = CGRectMake(40, lable.frame.origin.y-6, 30, 30);
-            
         }
-        
-        
-        
     }
 }
-
 
 -(void)drawView
 {
@@ -166,8 +292,9 @@
         lable.font = [UIFont systemFontOfSize:16.0];
         [scrollView addSubview:lable];
         [lableArr addObject:lable];
-        
     }
+    
+    [self setQuestion:textId];
 }
 
 
@@ -181,7 +308,7 @@
             
             break;
         case 2:{
-                    }
+                }
             
             break;
         case 6://上一题
@@ -264,13 +391,13 @@
 - (void)drawNav
 {
     static UIView *view;
-    view = [[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 44)];
+    view = [[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 49)];
     view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"lanDi.png"]];
     [self.view addSubview:view];
     
     
     UILabel *title;
-    title = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, view.frame.size.width-120, 44)];
+    title = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, view.frame.size.width-120, 49)];
     title.backgroundColor = [UIColor clearColor];
     title.text = @"试题答案";
     title.font = [UIFont boldSystemFontOfSize:18.f];
@@ -281,7 +408,7 @@
     UIButton *lButton =[[UIButton alloc] init];
     lButton =[UIButton buttonWithType:0];
     [lButton setImage:[UIImage imageNamed:@"home_back.png"] forState:UIControlStateNormal];
-    [lButton setFrame:CGRectMake(5, 7, 30, 30)];
+    [lButton setFrame:CGRectMake(10, 9, 30, 30)];
     lButton.tag = 1;
     [lButton addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:lButton];
@@ -352,15 +479,12 @@
     [viewTab addSubview:lableName5];
     
     
-    UILabel *lableNameId = [[UILabel alloc] initWithFrame:CGRectMake(135  ,20, 60, 20)];
-    lableNameId.text = [NSString stringWithFormat:@"%d / 80 ",textId];
+    lableNameId = [[UILabel alloc] initWithFrame:CGRectMake(135  ,20, 60, 20)];
+    lableNameId.text = [NSString stringWithFormat:@"%d / 80 ",textId+1];
     lableNameId.textColor = [UIColor whiteColor];
     lableNameId.font = [UIFont systemFontOfSize:18];
     [viewTab addSubview:lableNameId];
     
-    
-    
-
     
 }
 

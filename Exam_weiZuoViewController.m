@@ -1,24 +1,32 @@
 //
-//  Exam_checkViewController.m
+//  Exam_weiZuoViewController.m
 //  Mfeiji
 //
-//  Created by susu on 14-9-9.
+//  Created by susu on 14-9-12.
 //  Copyright (c) 2014年 susu. All rights reserved.
 //
 
-#import "Exam_checkViewController.h"
-#import "Exam_showAnswerViewController.h"
+#import "Exam_weiZuoViewController.h"
 
-@interface Exam_checkViewController ()<UITableViewDataSource,UITableViewDelegate>
+
+@interface Exam_weiZuoViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     UITableView * checkTableView;
     int questionNumber;
 }
-
 @end
 
-@implementation Exam_checkViewController
-@synthesize wrDic;
+@implementation Exam_weiZuoViewController
+@synthesize weidaArry ,delegate;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
 
 - (void)viewDidLoad
 {
@@ -37,10 +45,10 @@
     checkTableView.delegate =self;
     checkTableView.dataSource =self;
     checkTableView.separatorStyle = UITableViewCellSelectionStyleNone;
-//    checkTableView.scrollEnabled = NO;
+    //    checkTableView.scrollEnabled = NO;
     checkTableView.backgroundColor =[UIColor clearColor];
     [view addSubview:checkTableView];
-
+    
     [self drawNav];
 }
 
@@ -71,9 +79,9 @@
     [view addSubview:lButton];
     
     
-//    NSLog(@"check =%@",wrDic);
+    //    NSLog(@"check =%@",wrDic);
     
-
+    
 }
 -(void)choose:(UIButton *)sender
 {
@@ -83,15 +91,9 @@
     }
     else
     {
-//        NSLog(@"button %d",sender.tag);
-        Exam_showAnswerViewController *anwser = [[Exam_showAnswerViewController alloc] init];
-        anwser.showDic = wrDic;
-        anwser.textId = sender.tag;
-        anwser.ztDic = _zhuangtaiDic;
-        [self.navigationController pushViewController:anwser animated:YES];
-
-    }
-
+        [delegate setQuestion:(sender.tag-1)];
+        [self.navigationController popViewControllerAnimated:YES];
+    }    
 }
 
 
@@ -108,7 +110,7 @@
         [cell removeFromSuperview];
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:tableSampleIdentifier];
     }
-
+    
     
     [cell setSelectionStyle:UITableViewCellEditingStyleNone];//取消cell点击效果
     
@@ -127,59 +129,42 @@
     }
     for (int i =0; i< 5; i++) {
         //题号
-        
-        UIButton * bt = [[UIButton alloc] initWithFrame:CGRectMake(64*i, 0.5, 63, 63.5)];
-        [bt setTitle:[NSString stringWithFormat:@"%d",(indexPath.row*5 +(i + 1))] forState:UIControlStateNormal];
-        [bt setTitle:[NSString stringWithFormat:@"%d",(indexPath.row*5 +(i + 1))] forState:UIControlStateSelected];
-        bt.titleLabel.textColor = [UIColor blackColor];
-        bt.tag = indexPath.row*5 +i ;
-        [bt addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
-        [cell addSubview:bt];
-        
-
-    
-        //添加分界线
-        UIView * btLine = [[UIView alloc] initWithFrame:CGRectMake(63.5*i, 0, 0.5, 64)];
-        btLine.backgroundColor = [UIColor grayColor];
-        [cell addSubview:btLine];
-        
-        //对的错的
-        NSArray * wrongArr = [[NSArray alloc] init];
-        wrongArr = [wrDic objectForKey:@"wrongArr"] ;
-        for (int j =0; j < wrongArr.count ; j++) {
-            NSString * str =[[NSString alloc] initWithFormat:@"%@",[wrongArr objectAtIndex:j]];
-            int com = [str intValue];
-            if (com == (indexPath.row*5 +i)) {
-                bt.backgroundColor = [UIColor colorWithRed:255./255 green:213./255 blue:228./255 alpha:1];
-                bt.titleLabel.textColor = [UIColor redColor];
-            }
-        }
-        
-        NSArray * rArr = [[NSArray alloc] init];
-        rArr = [wrDic objectForKey:@"weidaArr"] ;
-        for (int k =0; k < rArr.count ; k++) {
-            NSString * str =[[NSString alloc] initWithFormat:@"%@",[rArr objectAtIndex:k]];
-            int com = [str intValue];
-            if (com == (indexPath.row*5 +i)) {
-                bt.backgroundColor = [UIColor whiteColor];
-            }
+        if ((indexPath.row*5 +(i + 1))<weidaArry.count) {
+            NSString * str = [weidaArry objectAtIndex:(indexPath.row*5 +(i + 1))];
+            UIButton * bt = [[UIButton alloc] initWithFrame:CGRectMake(64*i, 0.5, 63, 63.5)];
+            [bt setTitle:[NSString stringWithFormat:@"%@",[weidaArry objectAtIndex:(indexPath.row*5 +(i + 1))]] forState:UIControlStateNormal];
+            [bt setTitle:[NSString stringWithFormat:@"%@",[weidaArry objectAtIndex:(indexPath.row*5 +(i + 1))]] forState:UIControlStateSelected];
+            bt.titleLabel.textColor = [UIColor blackColor];
+            bt.tag = [str intValue] ;
+            [bt addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
+            [cell addSubview:bt];
+            
+            
+            //添加分界线
+            UIView * btLine = [[UIView alloc] initWithFrame:CGRectMake(63.5*i, 0, 0.5, 64)];
+            btLine.backgroundColor = [UIColor grayColor];
+            [cell addSubview:btLine];
         }
     }
-    
+     
     
     return cell;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    
     return 64;
     
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 16;
+    if (weidaArry.count%5 >0) {
+        return (weidaArry.count/5 +1);
+    }
+    NSLog(@"weida arr .count =%d",weidaArry.count);
+    return (weidaArry.count/5);
 }
 
 @end

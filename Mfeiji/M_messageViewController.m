@@ -46,7 +46,7 @@
 
 -(void)alertshow
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"此项功能暂时关闭" delegate:self cancelButtonTitle:@"cancel" otherButtonTitles:@"确定", nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"此项功能暂时关闭" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
     [alert show];
     
 }
@@ -55,14 +55,14 @@
 {
     UIView *view;
 
-    view = [[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 44)];
+    view = [[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 49)];
     view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"lanDi.png"]];
   
     [self.view addSubview:view];
     
     
     UILabel *title;
-    title = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, view.frame.size.width-120, 44)];
+    title = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, view.frame.size.width-120, 49)];
     
     title.backgroundColor = [UIColor clearColor];
     title.text = @"我的个人主页";

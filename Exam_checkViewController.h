@@ -11,6 +11,7 @@
 @interface Exam_checkViewController : UIViewController
 
 @property (strong,nonatomic)NSDictionary * wrDic;
+@property(strong ,nonatomic)NSDictionary *zhuangtaiDic;
 
 
 @end

@@ -53,12 +53,13 @@ static NSDictionary * dic;
     [self.view addSubview:view];
     lableArr = [[NSArray alloc] initWithObjects:@"全面学习模式", @"未答过题模式",@"复习错题模式",nil];
     
+   
+    
     [self drawNav];
     [self drawView];
     
     
 }
-
 
 -(void)drawView
 {
@@ -114,21 +115,21 @@ static NSDictionary * dic;
 - (void)drawNav
 {
     UIView *view;
-    view = [[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 44)];
+    view = [[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 49)];
     view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"lanDi.png"]];
     [self.view addSubview:view];
     
     
     UILabel *title;
-    title = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, view.frame.size.width-120, 44)];
+    title = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, view.frame.size.width-120, 49)];
     title.backgroundColor = [UIColor clearColor];
-    title.text = @"利用飞行器理论考试";
+    title.text = @"私用飞行器理论考试";
     title.font = [UIFont boldSystemFontOfSize:18.f];
     title.textAlignment = NSTextAlignmentCenter;
     title.textColor = [UIColor whiteColor];
     [view addSubview:title];
     
-    UIButton *homeBt =[[UIButton alloc] initWithFrame:CGRectMake(13, 7, 28, 27)];
+    UIButton *homeBt =[[UIButton alloc] initWithFrame:CGRectMake(13, 10, 30 , 30)];
     [homeBt setImage:[UIImage imageNamed:@"public_home.png"] forState:UIControlStateNormal];
     homeBt.tag =1;
     [homeBt addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
@@ -137,7 +138,7 @@ static NSDictionary * dic;
     UIButton *rButton =[[UIButton alloc] init];
     rButton =[UIButton buttonWithType:0];
     [rButton setImage:[UIImage imageNamed:@"topR.png"] forState:UIControlStateNormal];
-    [rButton setFrame:CGRectMake(275, 7, 30, 30)];
+    [rButton setFrame:CGRectMake(275, 10, 30, 30)];
     rButton.tag = 2;
     [rButton addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:rButton];
@@ -213,22 +214,26 @@ static NSDictionary * dic;
 -(void)pangdan
 {
 
-    NSString * to =[[NSString alloc] initWithFormat:@"%@", [[NSUserDefaults standardUserDefaults] objectForKey:@"auth_token"]];
-    NSString * userid = [[NSString alloc] initWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]];
-    if (to.length>0 && userid.length >0) {
-        //进入考试
-        _testView = [[Exam_testViewController alloc] init];
-        [self.navigationController pushViewController:_testView animated:NO];
-        
+    NSString * to =[[NSUserDefaults standardUserDefaults] objectForKey:@"auth_token"];
+    NSString * userid = [[NSUserDefaults standardUserDefaults] objectForKey:@"userID"];
+    if (UserName.text.length >0 && Password.text.length >0) {
+        [self login];
     }else{
-        
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                            message:@"您还没有登陆，请先登录"
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"确定"
-                                                  otherButtonTitles:@"返回",nil];
-        alertView.tag =1009;
-        [alertView show];
+        if (to.length>0 && userid.length >0) {
+            //进入考试
+            _testView = [[Exam_testViewController alloc] init];
+            [self.navigationController pushViewController:_testView animated:NO];
+            
+        }else{
+            
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                                message:@"您还没有登陆，请先登录"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"确定"
+                                                      otherButtonTitles:@"返回",nil];
+            alertView.tag =1009;
+            [alertView show];
+        }
     }
 
 }
@@ -242,21 +247,24 @@ static NSDictionary * dic;
     }
     else if(Password.text.length <6 || Password.text.length >20)
     {
-        msg =@"请重新输入密码";
+        msg =@"请输入6-20位密码";
     
     }
     
     if ([msg isEqualToString:@"ok"]) {
     
         NSDictionary * dic =[[NSDictionary alloc] initWithObjectsAndKeys:UserName.text,@"user[login]",Password.text,@"user[password]", nil];
-        
+ 
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager POST:[NSString stringWithFormat:@"http://42.120.9.87:4010/api/user_tokens/"] parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            NSDictionary * res =[[NSDictionary alloc] init];
+        [manager POST:[NSString stringWithFormat:@"http://42.120.9.87:4010/api/user_tokens?"] parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSDictionary * res;
             res = [responseObject objectForKey:@"user_token"];
             NSLog(@"res =%@",res);
             [[NSUserDefaults standardUserDefaults] setObject:[res objectForKey:@"token"] forKey:@"auth_token"];
             [[NSUserDefaults standardUserDefaults] setObject:[res objectForKey:@"user_id"] forKey:@"userId"];
+            
+            [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",UserName.text] forKey:@"username"];
             
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
                                                                 message:@"登陆成功"
@@ -268,16 +276,18 @@ static NSDictionary * dic;
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"error=%@",error);
+            NSString *msgStr =@"登陆失败 ,请检查网络";
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                                message:@"登陆失败 ,请检查网络"
+                                                                message:msgStr
                                                                delegate:nil
                                                       cancelButtonTitle:@"确定"
                                                       otherButtonTitles:nil];
             [alertView show];
         }];
-    
+
     }
     else{
+        
 
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
                                                             message:msg
@@ -292,7 +302,7 @@ static NSDictionary * dic;
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSLog(@"ale%d    %d",alertView.tag,buttonIndex);
+//    NSLog(@"ale%d    %d",alertView.tag,buttonIndex);
     if (alertView.tag ==1001) {
         if (buttonIndex ==0) {
             //进入考试

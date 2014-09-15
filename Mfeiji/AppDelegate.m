@@ -21,6 +21,7 @@
 {
  
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        [NSThread sleepForTimeInterval:2.0];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor blackColor];
     if (Version >= 7.0) {
@@ -32,11 +33,18 @@
     [self.window addSubview:view];
 
     
-    intoBt = [UIButton buttonWithType:UIButtonTypeCustom];
-    intoBt.frame = CGRectMake(105, 470, 125, 30);
-    intoBt.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"start_BT.png"]];
+    intoBt = [UIButton buttonWithType:UIButtonTypeRoundedRect];;
+    intoBt.frame = CGRectMake(105, self.window.frame.size.height-150, 125, 25);
+    intoBt.backgroundColor=[UIColor colorWithRed:41./255 green:49./255 blue:104./255 alpha:1.];
+    [intoBt.layer setCornerRadius:8.0];
+    [intoBt setTitle:@"进入体验" forState:UIControlStateNormal];
+    [intoBt setTitle:@"进入体验" forState:UIControlStateSelected];
+    intoBt.titleLabel.textColor =[UIColor whiteColor];
     [intoBt addTarget:self action:@selector(intoNext:) forControlEvents:UIControlEventTouchUpInside];
-    [self.window addSubview:intoBt];
+    [view addSubview:intoBt];
+    
+     [[UIApplication sharedApplication] setStatusBarHidden:NO];
+
     
     [self.window makeKeyAndVisible];
     return YES;

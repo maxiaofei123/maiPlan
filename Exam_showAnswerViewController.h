@@ -11,6 +11,8 @@
 @interface Exam_showAnswerViewController : UIViewController
 
 @property(strong ,nonatomic)NSDictionary * showDic;
+@property (strong ,nonatomic)NSDictionary *ztDic;
+@property(nonatomic)int textId;
 
 -(void)setQuestion:(int)number;
 
