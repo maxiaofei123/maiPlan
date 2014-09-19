@@ -7,11 +7,10 @@
 //
 
 #import "Exam_testViewController.h"
-#import "M_homeViewController.h"
 #import "Exam_resultViewController.h"
 #import "Exam_weiZuoViewController.h"
 
-@interface Exam_testViewController ()<UIScrollViewDelegate,UIAlertViewDelegate,UIActionSheetDelegate,UITableViewDataSource,UITableViewDelegate>
+@interface Exam_testViewController ()<UIScrollViewDelegate,UIAlertViewDelegate,UIActionSheetDelegate>
 {
     NSArray * labarArr;
     NSArray *textName;
@@ -28,7 +27,7 @@
     NSMutableArray *yidaArr;
     
     NSDictionary * checkDic ;
-
+    
     int selectTag;
     int timeDate;
     float  score;
@@ -39,16 +38,16 @@
     UILabel * timeLbale;
     UILabel *testLable;
     UILabel *anwserLable;
-   
+    
     UIScrollView * scrollView;
     UIImageView *subjectView;
     UIView *contentView;
-    UITableView *testTableView;
-    
 
+    
+    
     
     NSTimer * timer;
-
+    
 }
 
 @end
@@ -59,13 +58,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     self.view.backgroundColor = [UIColor blackColor];
     UIView * view = [[UIView alloc] initWithFrame:CGRectMake(0, 20, 320, self.view.frame.size.height-20)];
     view.backgroundColor =[UIColor colorWithPatternImage:[UIImage imageNamed:@"hui_bg.png"]];
     [self.view addSubview:view];
-
-
+    
+    
     labarArr = [[NSArray alloc]initWithObjects:@"上一题",@"未做",@"考试倒计时",@"交卷",@"下一题", nil ];
     abcArr = [[NSArray alloc] initWithObjects:@"A、",@"B、",@"C、", nil];
     zhuangTaiDic = [[NSMutableDictionary alloc] init];
@@ -73,7 +72,7 @@
     wrongArr = [[NSMutableArray alloc] init];
     daduiArr = [[NSMutableArray alloc] init];
     yidaArr  = [[NSMutableArray alloc] init];
-
+    
     textId =0;
     score  =0;
     
@@ -85,16 +84,16 @@
     recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
     [recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
     [[self view] addGestureRecognizer:recognizer];
-
-   
+    
+    
     [self drawNav];
     
     [self drawTabar];
-  
+    
     [self hideTabBar];//隐藏tabbar
     [self requestQuestion];
-   
-
+    
+    
 }
 
 -(void)handleSwipeFrom:(UISwipeGestureRecognizer *)recognizer
@@ -102,7 +101,7 @@
     
     if(recognizer.direction==UISwipeGestureRecognizerDirectionLeft) {
         NSLog(@"left");
-      
+        
         textId =textId == (textName.count-1) ? (textName.count-1) :textId + 1;
         NSString * valueStr = [[NSString alloc] init];
         
@@ -136,7 +135,7 @@
     
     if(recognizer.direction==UISwipeGestureRecognizerDirectionRight) {
         NSLog(@"right");
-   
+        
         //执行程序
         
         textId = textId ==0 ? 0 :textId -1;
@@ -168,14 +167,15 @@
 
 -(void)requestQuestion
 {
+    NSLog(@"requst test ");
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager GET:@"http://42.120.9.87:4010/api/exams/question_group" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [manager GET:@"http://42.120.9.87:4010/api/exams/question_group.json?" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         NSDictionary *dic=responseObject;
         textName=dic[@"question_group"];
-//        NSLog(@"textname=%@",textName);
-   //   比较每道题的答案是否为一，如果为一，则保存此序号到数组;
+//          NSLog(@"textname=%@",textName);
+        //   比较每道题的答案是否为一，如果为一，则保存此序号到数组;
         for (int i=0; i< textName.count;i++) {
             for (int j=0; j<3; j++) {
                 NSString * str = [[NSString alloc] init];
@@ -189,7 +189,7 @@
                 }
             }
         }
-//        NSLog(@"........................=%@",correctArr);
+        //        NSLog(@"........................=%@",correctArr);
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
                                                             message:@"开始做题了, 准备好了么?"
                                                            delegate:self
@@ -197,17 +197,25 @@
                                                   otherButtonTitles:nil];
         alertView.tag = 101;
         [alertView show];
-
+        
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-       [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    }];
-
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                            message:@"请查看网络是否链接?"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"知道了"
+                                                  otherButtonTitles:nil];
+        alertView.tag = 102;
+        [alertView show];
+          }];
+    
 }
 
 -(void)setQuestion:(int)number
 {
-   
+    
     textId = number;
     if (textName.count ==0) {
         
@@ -231,7 +239,7 @@
         
         float lableH;
         for (int j= 0; j<3; j++) {
-             UILabel *lable=[lableArr objectAtIndex:j];
+            UILabel *lable=[lableArr objectAtIndex:j];
             lable.frame = CGRectMake(80, 86+j*50, 200, 20);
         }
         for (int i=0; i<arr.count; i++) {
@@ -244,7 +252,7 @@
             CGSize size = CGSizeMake(200, 2000);
             CGSize labelsize =[[anwserText objectAtIndex:i] sizeWithFont:font constrainedToSize:size lineBreakMode:NSLineBreakByCharWrapping];;
             float lableH;
-           lableH = lable.frame.size.height>=labelsize.height?labelsize.height:20;
+            lableH = lable.frame.size.height>=labelsize.height?labelsize.height:20;
             
             if (i ==0) {
                 
@@ -254,7 +262,7 @@
             {
                 UILabel *lablea=[lableArr objectAtIndex:0];
                 lable.frame =CGRectMake(80,lablea.frame.size.height+lablea.frame.origin.y + 20,200, labelsize.height);
-
+                
             }
             else if( i ==2 )
             {
@@ -262,14 +270,13 @@
                 lable.frame =CGRectMake(80,lableb.frame.size.height+lableb.frame.origin.y+20, 200, labelsize.height);
                 lableH =lable.frame.size.height+lable.frame.origin.y;
                 
-
+                
             }
-            NSLog(@"lable fram=%f",lableH+30);
+//            NSLog(@"lable fram=%f",lableH+30);
             if ((lableH+30)>410) {
                 scrollView.contentSize = CGSizeMake(320, (lable.frame.size.height+lable.frame.origin.y+15));
                 
-                NSLog(@"...............");
-        
+                
             }else
             {
                 scrollView.contentSize =CGSizeMake(320,self.view.frame.size.height -109-64);
@@ -277,7 +284,7 @@
             //设置button的 fram
             
             UIButton *cBt = [buttonArr objectAtIndex:i];
-            cBt.frame = CGRectMake(40, lable.frame.origin.y-6, 30, 30);
+            cBt.frame = CGRectMake(40, lable.frame.origin.y-3, 25, 25);
             
         }
     }
@@ -291,7 +298,7 @@
         case 1:
             
             [timer invalidate];
-             timer = nil;
+            timer = nil;
             [self showTabBar];
             [self.navigationController popViewControllerAnimated:NO];
             
@@ -307,7 +314,7 @@
             textId = textId ==0 ? 0 :textId -1;
             NSString * valueStr = [[NSString alloc] init];
             valueStr =[zhuangTaiDic objectForKey:[NSString stringWithFormat:@"%d",textId]];
-             int tag = [valueStr  intValue];
+            int tag = [valueStr  intValue];
             if (!(valueStr.length ==0)) {
                 for (int i=0; i<3; i++) {
                     UIButton * bt = [buttonArr objectAtIndex:i];
@@ -327,7 +334,7 @@
             }
             [self setQuestion:textId];
         }
-    
+            
             break;
         case 7:
         {
@@ -344,16 +351,16 @@
                 if (p == 0) {
                     [weidaArr addObject:[NSString stringWithFormat:@"%d",i]];
                 }
-               
+                
             }
-//                NSLog(@"weida  =%@",weidaArr);
+            //                NSLog(@"weida  =%@",weidaArr);
             Exam_weiZuoViewController * weizuo = [[Exam_weiZuoViewController alloc] init];
             weizuo.weidaArry = weidaArr;
             weizuo.delegate =self;
             [self.navigationController pushViewController:weizuo animated:YES];
             
         }
-
+            
             break;
         case 8:
         {
@@ -368,7 +375,7 @@
             }else{
                 [self toResultView];
                 
-                }
+            }
         }
             break;
         case 9://下一题
@@ -378,7 +385,7 @@
             
             valueStr =[zhuangTaiDic objectForKey:[NSString stringWithFormat:@"%d",textId]];
             int tag = [valueStr  intValue];
-//            NSLog(@"ca,,,,,,,,,,,%d",valueStr.length);
+            //            NSLog(@"ca,,,,,,,,,,,%d",valueStr.length);
             if (!(valueStr.length ==0)) {
                 for (int i=0; i<3; i++) {
                     UIButton * bt = [buttonArr objectAtIndex:i];
@@ -388,10 +395,10 @@
                     }else
                     {
                         bt.selected = NO;
-                       
+                        
                     }
                 }
-
+                
             }
             else{
                 for (int i=0; i<3; i++) {
@@ -401,21 +408,21 @@
             }
             
             [self setQuestion:textId];
-        
+            
         }
-
+            
             break;
             
         default:
             break;
     }
-
+    
     //保存 button的选中状态设置
     if (sender.tag >2 && sender.tag<6) {
-    
+        
         for (int i=3; i<6; i++) {
             UIButton * bt =[buttonArr objectAtIndex:i-3];
-
+            
             if (i==sender.tag) {
                 bt.selected = YES;
                 [zhuangTaiDic setObject:[NSString stringWithFormat:@"%d",i-3] forKey:[NSString stringWithFormat:@"%d",textId]];
@@ -427,7 +434,7 @@
             }
         }
     }
- 
+    
 }
 
 
@@ -458,6 +465,13 @@
             timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateTime) userInfo:nil repeats:YES];
         }
     }
+    
+    if (alertView.tag == 102) {
+        
+        [self showTabBar];
+        [self.navigationController popViewControllerAnimated:NO];
+
+    }
 }
 
 
@@ -472,16 +486,16 @@
             if ([str isEqualToString:str1]) {
                 float x ;
                 x=score;
-                 score = x+1.25;
+                score = x+1.25;
                 [daduiArr addObject:[NSString stringWithFormat:@"%d",i]];
             }else
                 [wrongArr addObject:[NSString stringWithFormat:@"%d",i]];
         }
- 
+        
     }
     checkDic = [[NSDictionary alloc] initWithObjectsAndKeys:wrongArr,@"wrongArr", daduiArr,@"weidaArr" ,textName,@"textName",correctArr,@"answer",nil, nil];
     
-    NSLog(@"score =%f ，useTime=%@",score,timeLbale.text);
+//    NSLog(@"score =%f ，useTime=%@",score,timeLbale.text);
     [timer invalidate];
     timer = nil;
     resultView =[[Exam_resultViewController alloc] init];
@@ -494,12 +508,12 @@
         resultView.useTime = 120-imin;
         resultView.useSec = 0 ;
     }
-   
+    
     resultView.resultScore = score;
     resultView.checkDic =checkDic;
     resultView.zhuangtai = zhuangTaiDic;
     [self.navigationController pushViewController:resultView animated:NO];
-
+    
 }
 
 
@@ -516,25 +530,25 @@
 #pragma mark --绘制页面;
 -(void)drawView
 {
-
+    
     testLable = [[UILabel alloc] initWithFrame:CGRectMake(30, 10, 280, 20)];
     testLable.lineBreakMode = NSLineBreakByWordWrapping;
     testLable.numberOfLines = 0;
     testLable.font = [UIFont systemFontOfSize:16.0];
     [scrollView addSubview:testLable];
-
+    
     buttonArr =[[NSMutableArray alloc] init];
     lableArr = [[NSMutableArray alloc] init];
     for (int i=0; i<3; i++) {
-        UIButton * bt = [[UIButton alloc] initWithFrame:CGRectMake(40,80+ 50*i, 30, 30)];
-        [bt setImage:[UIImage imageNamed:@"test_Bt.png"] forState:UIControlStateNormal];
-        [bt setImage:[UIImage imageNamed:@"test_Bt1.png"] forState:UIControlStateSelected];
+        UIButton * bt = [[UIButton alloc] initWithFrame:CGRectMake(40,80+ 50*i, 20, 20)];
+        [bt setImage:[UIImage imageNamed:@"40-40.png"] forState:UIControlStateNormal];
+        [bt setImage:[UIImage imageNamed:@"40-40_1.png"] forState:UIControlStateSelected];
         bt.tag =3+i;
         bt.selected =NO;
         [bt addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
         [scrollView addSubview:bt];
         [buttonArr addObject:bt];
-    
+        
         UILabel *lable =[[UILabel alloc] initWithFrame:CGRectMake(80, 86+i*50, 200, 20)];
         lable.textColor = [UIColor blackColor];
         lable.lineBreakMode = NSLineBreakByWordWrapping;
@@ -547,7 +561,7 @@
 }
 
 
- -(void)drawTabar
+-(void)drawTabar
 {
     //--------tabbar按钮--------
     
@@ -622,7 +636,7 @@
 
 - (void)drawNav
 {
-   static UIView *view;
+    static UIView *view;
     view = [[UIView alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 49)];
     view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"lanDi.png"]];
     [self.view addSubview:view];
@@ -698,7 +712,7 @@
         [alertView show];
         
     }else{
-
+        
         timeDate = timeDate - 1 > 0 ? timeDate - 1 : 0;
         timeLbale.text = [self getTime];
     }
@@ -747,7 +761,7 @@
     else
         
         contentView = [self.tabBarController.view.subviews objectAtIndex:0];
-        contentView.frame = CGRectMake(contentView.bounds.origin.x, contentView.bounds.origin.y,  contentView.bounds.size.width, contentView.bounds.size.height - self.tabBarController.tabBar.frame.size.height);
+    contentView.frame = CGRectMake(contentView.bounds.origin.x, contentView.bounds.origin.y,  contentView.bounds.size.width, contentView.bounds.size.height - self.tabBarController.tabBar.frame.size.height);
     self.tabBarController.tabBar.hidden = NO;
     
 }

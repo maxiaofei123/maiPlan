@@ -257,7 +257,7 @@
             
             //设置button的 fram
             UIButton *cBt = [buttonArr objectAtIndex:i];
-            cBt.frame = CGRectMake(40, lable.frame.origin.y-6, 30, 30);
+            cBt.frame = CGRectMake(40, lable.frame.origin.y, 20, 20);
         }
     }
 }
@@ -275,9 +275,9 @@
     buttonArr =[[NSMutableArray alloc] init];
     lableArr = [[NSMutableArray alloc] init];
     for (int i=0; i<3; i++) {
-        UIButton * bt = [[UIButton alloc] initWithFrame:CGRectMake(40,80+ 50*i, 30, 30)];
-        [bt setImage:[UIImage imageNamed:@"test_Bt.png"] forState:UIControlStateNormal];
-        [bt setImage:[UIImage imageNamed:@"test_Bt1.png"] forState:UIControlStateSelected];
+        UIButton * bt = [[UIButton alloc] initWithFrame:CGRectMake(40,80+ 50*i, 20, 20)];
+        [bt setImage:[UIImage imageNamed:@"test_bt.png"] forState:UIControlStateNormal];
+        [bt setImage:[UIImage imageNamed:@"40-40_1.png"] forState:UIControlStateSelected];
         bt.tag =3+i;
         bt.selected =NO;
         [bt addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];

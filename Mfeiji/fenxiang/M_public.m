@@ -16,12 +16,12 @@
 {
     if ([WXApi isWXAppInstalled] && [WXApi isWXAppSupportApi]) {
         WXMediaMessage *message = [WXMediaMessage message];
-        message.title = @"麦飞机";
-        message.description = @"麦飞机,一起飞翔！";
-        [message setThumbImage:[UIImage imageNamed:@"weixinlogo.png"]];
+        message.title = @"助力中国和人飞行，成就国人放飞梦想.";
+        message.description = @"助力中国和人飞行，成就国人放飞梦想。";
+        [message setThumbImage:[UIImage imageNamed:@"120-120.png"]];
         
         WXWebpageObject *ext = [WXWebpageObject object];
-        ext.webpageUrl = [NSString stringWithFormat:@"%@",@"https://itunes.apple.com/us/app/xiang-yan/id903360677?l=zh&ls=1&mt=8"];
+        ext.webpageUrl = [NSString stringWithFormat:@"%@",@"https://itunes.apple.com/us/app/mai-fei-ji/id920281189?l=zh&ls=1&mt=8"];
         
         message.mediaObject = ext;
         

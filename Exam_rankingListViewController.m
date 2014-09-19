@@ -48,7 +48,7 @@
 -(void)drawView
 {
     UILabel * titleLable = [[UILabel alloc] initWithFrame:CGRectMake(0, 70, 320, 30)];
-    titleLable.text = @"    用户昵称           成绩              排名";
+    titleLable.text = @"    用户昵称           成绩               排名";
     titleLable.textColor = [UIColor blackColor];
     titleLable.font =[UIFont systemFontOfSize:16];
     [self.view addSubview:titleLable];
@@ -59,26 +59,26 @@
     [self.view addSubview:scrollView];
     NSLog(@"nu =%d",numer);
     for (int i=0; i<numer; i++) {
-        UILabel * nameLable = [[UILabel alloc] initWithFrame:CGRectMake(0, 5 + i*40, 90, 30)];
+        UILabel * nameLable = [[UILabel alloc] initWithFrame:CGRectMake(0, 5 + i*50, 90, 30)];
         nameLable.textColor = [UIColor blackColor];
         nameLable.textAlignment = 1;
         nameLable.text = [NSString stringWithFormat:@"%@",[nameArr objectAtIndex:i]];
         
         [scrollView addSubview:nameLable];
         
-        UILabel *scoreLable = [[UILabel alloc] initWithFrame:CGRectMake(100, 5 + i*40, 100, 30)];
+        UILabel *scoreLable = [[UILabel alloc] initWithFrame:CGRectMake(100, 5 + i*50, 100, 30)];
         scoreLable.textColor = [UIColor blackColor];
         scoreLable.textAlignment = 1;
         scoreLable.text = [NSString stringWithFormat:@"%@ 分",[soreArr objectAtIndex:i]];
         [scrollView addSubview:scoreLable];
         
-        UILabel *paiLable = [[UILabel alloc] initWithFrame:CGRectMake(200, 5+i*40, 100, 30)];
+        UILabel *paiLable = [[UILabel alloc] initWithFrame:CGRectMake(200, 5+i*50, 100, 30)];
         paiLable.textColor =[UIColor blackColor];
         paiLable.textAlignment =1;
         paiLable.text = [NSString stringWithFormat:@"第  %d  名",i+1];
         [scrollView addSubview:paiLable];
     }
-
+    scrollView.contentSize = CGSizeMake(320, 500);
 
 }
 

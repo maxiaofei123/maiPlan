@@ -7,20 +7,22 @@
 //
 
 #import "M_setViewController.h"
-#import "SevenSwitch.h"
+
 
 
 
 @interface M_setViewController ()
 {
     NSArray * nameArr;
+    
+    NSString * version;
 }
 
 @end
 
 @implementation M_setViewController
 
-@synthesize tableView;
+@synthesize setTableView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -52,13 +54,13 @@
 -(void)drawView
 {
     //tableView = [[UITableView alloc] initWithFrame:CGRectMake(10, 80, 300, 200) style:UITableViewStyleGrouped];
-    tableView = [[UITableView alloc] initWithFrame:CGRectMake(20, 100, 280, 200)];
-    tableView.delegate = self;
-    tableView.dataSource =self;
-    tableView.backgroundColor = [UIColor clearColor];
-    self.tableView.showsVerticalScrollIndicator = NO;
-    tableView.scrollEnabled = NO;
-    [self.view addSubview:tableView];
+    setTableView = [[UITableView alloc] initWithFrame:CGRectMake(20, 100, 280, 200)];
+    setTableView.delegate = self;
+    setTableView.dataSource =self;
+    setTableView.backgroundColor = [UIColor clearColor];
+    self.setTableView.showsVerticalScrollIndicator = NO;
+    setTableView.scrollEnabled = NO;
+    [self.view addSubview:setTableView];
 
 }
 
@@ -97,38 +99,9 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:tableSampleIdentifier];
     }
 
-    
-//    switch (section) {
-//        case 0:
-//            cell.textLabel.text =[nameArr objectAtIndex:row];
-//            if (row == 0 || row == 4) {
-//              
-//            }
-//            else//添加开关
-//            {
-//                [cell setSelectionStyle:UITableViewCellEditingStyleNone];//取消cell点击效果
-//                
-//                SevenSwitch * mySwithch = [[SevenSwitch alloc]initWithFrame:CGRectMake(260, 20, 40, 20)];
-//                mySwithch.center = CGPointMake(260, 20);
-//                [mySwithch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
-//                mySwithch.offImage = [UIImage imageNamed:@"switch_off1.png"];
-//                mySwithch.onImage = [UIImage imageNamed:@"switch_on.png"];
-//                mySwithch.onColor = [UIColor colorWithHue:0.08f saturation:0.74f brightness:1.00f alpha:1.00f];
-//                mySwithch.tag = row;
-//                mySwithch.isRounded = NO;
-//                [cell addSubview:mySwithch];
-//            }
-//
-//            break;
-//        case 1:
-//          //  cell.textLabel.text =[nameArr objectAtIndex:row];
-//            break;
-//            
-//        default:
-//            break;
-//       }
+
     cell.textLabel.text =[nameArr objectAtIndex:row];
-    cell.font = [UIFont systemFontOfSize:14];
+    cell.textLabel.font = [UIFont systemFontOfSize:14.];
     UIView *line=[[UIView alloc]initWithFrame:CGRectMake(0, 39.5, 300,0.5)];
     line.backgroundColor=[UIColor colorWithRed:0.7 green:0.7 blue:0.77 alpha:1];
     [tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -147,13 +120,6 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-//    if (section == 0) {
-//        return 5;
-//    }
-//    else
-//    {
-//        return 3;
-//    }
     
     return 3;
     
@@ -194,61 +160,18 @@
 
     
 }
-
-- (void)switchChanged:(SevenSwitch *)sender {
-    NSLog(@"Changed value to: %@", sender.on ? @"ON" : @"OFF");
-    switch (sender.tag) {
-        case 1:
-            if (sender.on) {
-                [self onCheckVersion];
-                 NSLog(@"sender on ");
-            }else
-            {
-                
-            }
-            
-            break;
-        case 2:
-            
-            break;
-        case 3:
-            
-            break;
-            
-        default:
-            break;
-    }
-}
-
-#pragma mark -wifii
-//更新应用程序
+////更新应用程序
 -(void)onCheckVersion
 {
     NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
     CFShow((__bridge CFTypeRef)(infoDic));
     NSString *currentVersion = [infoDic objectForKey:@"CFBundleVersion"];
-    
-    NSString *URL = @"http://itunes.apple.com/lookup?id=com.LianYi.Mfj";
-    
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:[NSURL URLWithString:URL]];
-    [request setHTTPMethod:@"POST"];
-    NSHTTPURLResponse *urlResponse = nil;
-    NSError *error = nil;
-    NSData *recervedData = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&error];
-    
-    NSString *results = [[NSString alloc] initWithBytes:[recervedData bytes] length:[recervedData length] encoding:NSUTF8StringEncoding];
-    
-    NSDictionary *dic = [results JSONValue];
-
-    NSArray *infoArray = [dic objectForKey:@"results"];
-    NSLog(@"info=%@",infoArray);
-    if ([infoArray count]) {
-        NSDictionary *releaseInfo = [infoArray objectAtIndex:0];
-        NSString *lastVersion = [releaseInfo objectForKey:@"version"];
-        
-        if (![lastVersion isEqualToString:currentVersion]) {
-          
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:@"http://42.120.9.87:4010/api/version?" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        version = [NSString stringWithFormat:@"%@",[responseObject objectForKey:@"version"]];
+        if (![version isEqualToString:currentVersion]) {
+            
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"更新" message:@"有新的版本更新，是否前往更新？" delegate:self cancelButtonTitle:@"关闭" otherButtonTitles:@"更新", nil];
             alert.tag = 10000;
             [alert show];
@@ -259,15 +182,48 @@
             alert.tag = 10001;
             [alert show];
         }
-    }
 
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                            message:@"请查看网络是否链接?"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"知道了"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }];
+ 
+    
+    
+    
+}
+
+-(void)requestVersion
+{
+      AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:@"http://42.120.9.87:4010/api/version?" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        version = [responseObject objectForKey:@"version"];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                            message:@"请查看网络是否链接?"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"知道了"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }];
+    NSLog(@",,,,%@",version);
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (alertView.tag==10000) {
         if (buttonIndex==1) {
-            NSURL *url = [NSURL URLWithString:@"https://itunes.apple.com"];
+            NSURL *url = [NSURL URLWithString:@"https://itunes.apple.com/us/app/mai-fei-ji/id920281189?l=zh&ls=1&mt=8"];
             [[UIApplication sharedApplication]openURL:url];
         }
     }

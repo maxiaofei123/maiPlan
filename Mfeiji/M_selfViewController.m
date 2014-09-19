@@ -8,11 +8,15 @@
 
 #import "M_selfViewController.h"
 #import "ImageSizeManager.h"
+#import "UIImageView+WebCache.h"
+#import "ASIFormDataRequest.h"
+#import "UIImageView+WebCache.h"
 
 @interface M_selfViewController ()<UIScrollViewDelegate,UITextFieldDelegate>
 {
     NSArray *nameArr;
     UIImageView *headView;
+    UIImage * linshiImage;
     
     NSMutableArray *textFileArr;
     int textId;
@@ -24,12 +28,13 @@
     UITextField *phoneText;
     UITextField *schoolText;
     
+    
     UILabel * scoreLable;
     
     MBProgressHUD *mb;
     
     int will;
-    
+    ASIFormDataRequest *request;
  
 }
 
@@ -115,23 +120,24 @@
         
         
         NSLog(@"name =%@ phone =%@  grander =%@ school=%@ score=%@",nameStr,phoneStr,genderStr,schoolStr,schoolStr);
-        if (nameStr.length > 0) {
+        if (!([nameStr isEqualToString:@"<null>"])) {
             nameText.text = nameStr;
         }
-        if (genderStr.length > 0) {
+        if (!([genderStr isEqualToString:@"<null>"])) {
             granderText.text = genderStr;
         }
-        if (genderStr.length > 0) {
+        if (!([phoneStr isEqualToString:@"<null>"])) {
             phoneText.text = phoneStr;
         }
-        if (genderStr.length > 0) {
+        if (!([schoolStr isEqualToString:@"<null>"])) {
             schoolText.text = schoolStr;
             
         }
-        if(scorestr.length > 0)
+        if([scorestr isEqualToString:@"<null>"] || scorestr.length ==0)
         {
         
         }else{
+            
             scoreLable.text =[NSString stringWithFormat:@"%@  分",[tefileDic objectForKey:@"topscore"]];
         }
     }
@@ -139,7 +145,7 @@
 
 -(void)requst
 {
-        NSString *str =[[NSString alloc] initWithFormat:@"http://42.120.9.87:4010/api/users/profile?auth_token=%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"]];
+    NSString *str =[[NSString alloc] initWithFormat:@"http://42.120.9.87:4010/api/users/profile?auth_token=%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"]];
         
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -148,7 +154,17 @@
            NSDictionary * dic=responseObject;
             tefileDic = [NSMutableDictionary alloc];
              tefileDic =[dic objectForKey:@"user"];
+            // 设置头像
+            NSString *imageUrl = [NSString stringWithFormat:@"%@",[[[tefileDic objectForKey:@"avatar"] objectForKey:@"thumb"] objectForKey:@"url"]];
+            [[NSUserDefaults standardUserDefaults] setObject:imageUrl forKey:@"imageUrl"];
+            
+            if (imageUrl.length > 0) {
+                
+                [headView setImageWithURL:[NSURL URLWithString:imageUrl]];
+            }
+//            NSLog(@"imageurl = %@ ",imageUrl);
             NSLog(@"myself =%@",tefileDic);
+            //显示个人信息
             [self setTextFile];
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -164,12 +180,11 @@
             phoneText.text =nil;
             schoolText.text = nil;
         }];
-
 }
 
 -(void)commitUser
 {
-    if ([[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"] ==NULL) {
+    if ([[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"] == NULL) {
         nameText.text = nil;
         granderText.text =nil;
         phoneText.text =nil;
@@ -190,30 +205,53 @@
                                                       otherButtonTitles:nil];
             [alertView show];
         }else{
+           // asi 上传修改信息
             mb = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             mb.labelText = @"提交资料中...";
-
-            NSDictionary *dic = [[NSDictionary alloc]initWithObjectsAndKeys: nameText.text,@"user[username]",granderText.text,@"user[gender]",phoneText.text,@"user[phone]",schoolText.text,@"user[school_name]", UIImageJPEGRepresentation(headView.image, 1.0),@"user[avatar]",nil];
-
             NSString * userId = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
-            AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-            [manager PUT:[NSString stringWithFormat:@"http://42.120.9.87:4010/api/users/%@?auth_token=%@",userId,[[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"]] parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                
-                mb.labelText = @"修改成功";
-                [mb hide:YES afterDelay:2];
-                
-                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                                            message:@"保存失败,请检查网络"
-                                                                           delegate:nil
-                                                                  cancelButtonTitle:@"确定"
-                                                                  otherButtonTitles:nil];
-                        [alertView show];
-            }];
+            
+            NSString  * s =[NSString stringWithFormat:@"http://42.120.9.87:4010/api/users/%@?auth_token=%@",userId,[[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"]];
+            NSLog(@"str =%@",s);
+            NSURL *url = [NSURL URLWithString:[s stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            request = [ASIFormDataRequest requestWithURL:url];
+            NSData *mData = UIImageJPEGRepresentation(headView.image, 1);
+            
+            [request  addData:mData  withFileName:@"avatarImage.png" andContentType:@"image/JPEG"  forKey:@"user[avatar]"];
+            [request setPostValue:nameText.text forKey:@"user[username]"];
+            [request setPostValue:granderText.text forKey:@"user[gender]"];
+            [request setPostValue:phoneText.text forKey:@"user[phone]"];
+            [request setPostValue:schoolText.text forKey:@"user[school_name]"];
+            [request setDelegate:self];
+            [request setRequestMethod:@"PUT"];
+            request.timeOutSeconds=60;
+            [request startAsynchronous];
+            
         }
     }
-
 }
+
+- (void)requestFinished:(ASIHTTPRequest *)r
+{
+     mb.labelText = @"提交成功";
+    [mb hide:YES afterDelay:1];
+    NSData *jsonData = [r responseData];
+    NSError *error = nil;
+    id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:&error];
+    //清楚之前的图片缓存
+    NSString * key = [[NSUserDefaults standardUserDefaults]objectForKey:@"imageUrl"];
+//    [[SDImageCache sharedImageCache] removeImageForKey:key];
+    [[SDImageCache sharedImageCache] cleanDisk];
+    
+    NSLog(@"requstFinished=%@",jsonObject);
+    
+}
+- (void)requestFailed:(ASIHTTPRequest *)r
+{
+    [mb hide:YES];
+    NSError *error = [r error];
+    NSLog(@"profile_vatar:%@",error);
+}
+
 
 -(void)textFieldEditing
 {
@@ -238,10 +276,13 @@
     
 }
 
+
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     [textField resignFirstResponder];
     [MtableView setContentOffset:CGPointMake(0, 0) animated:YES];
+//     [headView setImageWithURL:[NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:@"imageUrl"]]];
+    
 }
 
 - (void)drawNav
@@ -269,13 +310,13 @@
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *tableSampleIdentifier = @"TableSampleIdentifier";
+   NSString *tableSampleIdentifier = [NSString stringWithFormat:@"%d%d",indexPath.section,indexPath.row];
     
     UITableViewCell * cell =  [tableView dequeueReusableCellWithIdentifier:tableSampleIdentifier];
     
     if (cell ==nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:tableSampleIdentifier];
         
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:tableSampleIdentifier];
     }
     else
     {
@@ -291,13 +332,26 @@
     switch (indexPath.section) {
         case 0:
         {
-            headView = [[UIImageView alloc]initWithFrame:CGRectMake(8, 5, 50, 50)];
-            headView.image = [UIImage imageNamed:@"public_head.png"];
-            headView.userInteractionEnabled = YES;
-            [cell addSubview:headView];
+            UIImageView * hImage = [[UIImageView alloc] initWithFrame:CGRectMake(8, 5, 50, 50)];
+            hImage.image =[UIImage imageNamed:@"public_head.png"];
+            [cell addSubview:hImage];
+            hImage.userInteractionEnabled =YES;
+            UITapGestureRecognizer *pass1 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(upLoad)];
+            [hImage addGestureRecognizer:pass1];
             
+            headView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 50, 50)];
+            headView.userInteractionEnabled = YES;
+            [hImage addSubview:headView];
             UITapGestureRecognizer *pass = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(upLoad)];
             [headView addGestureRecognizer:pass];
+            if (linshiImage == nil) {
+                
+                [headView setImageWithURL:[NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:@"imageUrl"]]];
+            }else
+            {
+                headView.image = linshiImage;
+            }
+
             
             UIButton *changeBt =[[UIButton alloc] init];
             changeBt =[UIButton buttonWithType:0];
@@ -356,8 +410,7 @@
             cell.textLabel.text =@"私照理论 :";
             cell.textLabel.font = [UIFont systemFontOfSize:16];
             scoreLable = [[UILabel  alloc] initWithFrame:CGRectMake(110, 16, 200, 30)];
-            scoreLable.textColor =[UIColor blackColor];
-            scoreLable.text =@"       分";
+            scoreLable.textColor =[UIColor redColor];
             scoreLable.font = [UIFont systemFontOfSize:16];
             [cell addSubview:scoreLable];
         }
@@ -405,7 +458,6 @@
 
 -(UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    
     UILabel *headerLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 38)];
     if (section == 2) {
         headerLabel.text = @"最高成绩";
@@ -479,10 +531,11 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    UIImage *image2 = [ImageSizeManager getMaxImageWithOldImage:info[UIImagePickerControllerEditedImage]];
+    linshiImage = [ImageSizeManager getMaxImageWithOldImage:info[UIImagePickerControllerEditedImage]];
  
     [picker dismissViewControllerAnimated:YES completion:^{
-        headView.image = image2;
+       headView.image = linshiImage;
+     
     }];
 }
 

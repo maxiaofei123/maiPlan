@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 @class M_homeViewController,M_examViewController,M_selfViewController,M_messageViewController,M_setViewController;
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate,WXApiDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong ,nonatomic) M_homeViewController *homeView;

@@ -56,7 +56,7 @@
     title = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, view.frame.size.width-120, 49)];
     
     title.backgroundColor = [UIColor clearColor];
-    title.text = @"考试答案";
+    title.text = @"查看答案";
     title.font = [UIFont boldSystemFontOfSize:18.f];
     title.textAlignment = NSTextAlignmentCenter;
     title.textColor = [UIColor whiteColor];
@@ -133,6 +133,7 @@
         [bt setTitle:[NSString stringWithFormat:@"%d",(indexPath.row*5 +(i + 1))] forState:UIControlStateSelected];
         bt.titleLabel.textColor = [UIColor blackColor];
         bt.tag = indexPath.row*5 +i ;
+        [bt setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [bt addTarget:self action:@selector(choose:) forControlEvents:UIControlEventTouchUpInside];
         [cell addSubview:bt];
         

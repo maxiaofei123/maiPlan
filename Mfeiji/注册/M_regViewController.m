@@ -196,9 +196,9 @@
     {
         msg=@"请输入用户名";
         
-    }else if(UserName.text.length<6||UserName.text.length>15)
+    }else if(UserName.text.length<4||UserName.text.length>15)
     {
-        msg=@"请输入6~15个字符";
+        msg=@"请输入4~15个字符";
     }
     else if(Password.text.length==0)
     {
@@ -226,28 +226,46 @@
             NSDictionary * res =[[NSDictionary alloc] init];
             res = responseObject;
             NSLog(@"res =%@",responseObject);
-            [[NSUserDefaults standardUserDefaults] setObject:UserName.text forKey:@"username"];
-            [[NSUserDefaults standardUserDefaults] setObject:UserName.text forKey:@"username"];
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                                message:@"注册成功"
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"确定"
-                                                      otherButtonTitles:nil];
-            [alertView show];
-            [self showTabBar];
-            [self.navigationController popViewControllerAnimated:YES];
-
-            
+            int error = [[responseObject objectForKey:@"error"] intValue];
+            if (error == 1) {
+                [[NSUserDefaults standardUserDefaults] setObject:UserName.text forKey:@"username"];
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                                    message:@"注册成功"
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"确定"
+                                                          otherButtonTitles:nil];
+                [alertView show];
+                UserName.text =nil;
+                email.text =nil;
+                Password.text=nil;
+                
+                [self showTabBar];
+                [self.navigationController popViewControllerAnimated:YES];
+                
+            }else
+            {
+                NSString * msg =[responseObject objectForKey:@"msg"];
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                                    message:[NSString stringWithFormat:@"注册失败，%@",msg]
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"确定"
+                                                          otherButtonTitles:nil];
+                [alertView show];
+                
+            }
+                
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            [mb hide:YES];
-            NSLog(@"error=%@",error);
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                                message:@"注册失败"
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"确定"
-                                                      otherButtonTitles:nil];
-            [alertView show];
-        }];
+                [mb hide:YES];
+                NSLog(@"error=%@",error);
+            NSLog(@"JSON: %@", operation.responseObject);
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                                    message:@"注册失败，请检查网络"
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"确定"
+                                                          otherButtonTitles:nil];
+                [alertView show];
+            }];
+ 
     }else
     {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
@@ -399,7 +417,6 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

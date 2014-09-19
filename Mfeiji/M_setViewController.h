@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SBJson.h"
+//#import "SBJson.h"
 
-@interface M_setViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>
-@property (strong,nonatomic)UITableView * tableView;
+@interface M_setViewController : UIViewController<UITableViewDelegate,UITableViewDataSource, NSURLConnectionDelegate>
+@property (strong,nonatomic)UITableView * setTableView;
 
 @end

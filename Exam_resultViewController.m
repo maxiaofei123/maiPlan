@@ -54,11 +54,13 @@
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager GET:str parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [manager POST:str parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+//        NSLog(@"resu =%@",responseObject);
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        NSLog(@"error +%@",error);
     }];
     
 }
@@ -66,6 +68,21 @@
 
 -(void)drawView
 {
+    UILabel * userLable = [[UILabel alloc] initWithFrame:CGRectMake(50, 140, 50, 20)];
+    userLable.text = [NSString stringWithFormat:@"%@:",[[NSUserDefaults standardUserDefaults] objectForKey:@"username"]];
+    userLable.font = [UIFont systemFontOfSize:16];
+    [self.view addSubview:userLable];
+    
+    UILabel * tishiL = [[UILabel alloc] initWithFrame:CGRectMake(50, 165, 270, 30)];
+    tishiL.font = [UIFont systemFontOfSize:16];
+    [self.view addSubview:tishiL];
+    if (resultScore < 90) {
+        tishiL.text =@"您的飞行梦想折断了双翼,请继续努力!";
+    }else
+    {
+        tishiL.text =@"您离飞行梦想更近了一步,恭喜您!";
+    }
+    
     for (int i =0 ; i<3; i++) {
         UILabel * Lable =[[UILabel alloc] initWithFrame:CGRectMake(50, 220+i*30, 200, 20)];
         if (i==0) {

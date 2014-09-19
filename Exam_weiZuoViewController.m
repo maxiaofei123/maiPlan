@@ -64,7 +64,7 @@
     title = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, view.frame.size.width-120, 49)];
     
     title.backgroundColor = [UIColor clearColor];
-    title.text = @"考试答案";
+    title.text = @"未做题目";
     title.font = [UIFont boldSystemFontOfSize:18.f];
     title.textAlignment = NSTextAlignmentCenter;
     title.textColor = [UIColor whiteColor];

@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "M_homeViewController.h"
 #import "M_examViewController.h"
 #import "M_selfViewController.h"
 #import "M_messageViewController.h"
@@ -39,6 +38,7 @@
     [intoBt.layer setCornerRadius:8.0];
     [intoBt setTitle:@"进入体验" forState:UIControlStateNormal];
     [intoBt setTitle:@"进入体验" forState:UIControlStateSelected];
+    intoBt.titleLabel.font = [UIFont systemFontOfSize:14];
     intoBt.titleLabel.textColor =[UIColor whiteColor];
     [intoBt addTarget:self action:@selector(intoNext:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:intoBt];
@@ -47,15 +47,13 @@
 
     
     [self.window makeKeyAndVisible];
+     [WXApi registerApp:@"wxe3e595aa048f61e5"];
     return YES;
 }
 -(void)intoNext:(UIButton *)sender
 {
     [intoBt removeFromSuperview];
     self.window.backgroundColor = [UIColor whiteColor];
-    
-    homeView = [[M_homeViewController alloc] init];
-    _home_Nav = [[UINavigationController alloc] initWithRootViewController:homeView];
     
     examView = [[M_examViewController alloc] init];
     _exam_Nav = [[UINavigationController alloc] initWithRootViewController:examView];
@@ -78,13 +76,13 @@
     _home_Nav.tabBarItem.image = [UIImage imageNamed:@"home.png"];
     
     _exam_Nav.tabBarItem.title = @"考试";
-    _exam_Nav.tabBarItem.image = [UIImage imageNamed:@"exam.png"];
+    _exam_Nav.tabBarItem.image = [UIImage imageNamed:@"home.png"];
     
     _self_Nav.tabBarItem.title = @"我的";
     _self_Nav.tabBarItem.image = [UIImage imageNamed:@"my.png"];
     
     _message_Nav.tabBarItem.title = @"航校";
-    _message_Nav.tabBarItem.image = [UIImage imageNamed: @"liuyan.png"];
+    _message_Nav.tabBarItem.image = [UIImage imageNamed: @"hangxiao.png"];
     
     _set_Nav.tabBarItem.title = @"设置";
     _set_Nav.tabBarItem.image = [UIImage imageNamed:@"set.png"];
@@ -103,6 +101,17 @@
 
 }
 
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+    [WXApi handleOpenURL:url delegate:self];
+    return YES;
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    [WXApi handleOpenURL:url delegate:self];
+    return YES;
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {

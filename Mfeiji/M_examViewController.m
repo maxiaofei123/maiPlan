@@ -8,12 +8,11 @@
 
 #import "M_examViewController.h"
 #import "Exam_testViewController.h"
-#import "M_homeViewController.h"
 #import "M_regViewController.h"
 
 static NSDictionary * dic;
 
-@interface M_examViewController ()<UIAlertViewDelegate>
+@interface M_examViewController ()<UIAlertViewDelegate,UIActionSheetDelegate>
 {
     NSArray *lableArr;
     UIButton * select1;
@@ -253,27 +252,42 @@ static NSDictionary * dic;
     
     if ([msg isEqualToString:@"ok"]) {
     
-        NSDictionary * dic =[[NSDictionary alloc] initWithObjectsAndKeys:UserName.text,@"user[login]",Password.text,@"user[password]", nil];
+        NSDictionary * dic =[[NSDictionary alloc] initWithObjectsAndKeys:Password.text,@"user[password]", UserName.text,@"user[login]",nil];
  
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
         [manager POST:[NSString stringWithFormat:@"http://42.120.9.87:4010/api/user_tokens?"] parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSLog(@"res =%@",responseObject);
+            NSString *error = [responseObject objectForKey:@"error"];
+            int er =[error intValue];
+            if (er == 0) {
+                //登录失败
+                NSString *msg = [responseObject objectForKey:@"msg"];
+                
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                                    message:[NSString stringWithFormat:@"登录失败，%@",msg]
+                                                                   delegate:self
+                                                          cancelButtonTitle:@"确定"
+                                                          otherButtonTitles:nil,nil];
+             
+                [alertView show];
+
+            }else {
             
-            NSDictionary * res;
-            res = [responseObject objectForKey:@"user_token"];
-            NSLog(@"res =%@",res);
-            [[NSUserDefaults standardUserDefaults] setObject:[res objectForKey:@"token"] forKey:@"auth_token"];
-            [[NSUserDefaults standardUserDefaults] setObject:[res objectForKey:@"user_id"] forKey:@"userId"];
-            
-            [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",UserName.text] forKey:@"username"];
-            
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                                message:@"登陆成功"
-                                                               delegate:self
-                                                      cancelButtonTitle:@"进去答题"
-                                                      otherButtonTitles:@"返回",nil];
-            alertView.tag = 1001;
-            [alertView show];
-            
+                NSDictionary * res;
+                res = [responseObject objectForKey:@"user_token"];
+                [[NSUserDefaults standardUserDefaults] setObject:[res objectForKey:@"token"] forKey:@"auth_token"];
+                [[NSUserDefaults standardUserDefaults] setObject:[res objectForKey:@"user_id"] forKey:@"userId"];
+                
+                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",UserName.text] forKey:@"username"];
+                
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                                    message:@"登陆成功"
+                                                                   delegate:self
+                                                          cancelButtonTitle:@"进去答题"
+                                                          otherButtonTitles:@"返回",nil];
+                alertView.tag = 1001;
+                [alertView show];
+            }
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"error=%@",error);
             NSString *msgStr =@"登陆失败 ,请检查网络";
