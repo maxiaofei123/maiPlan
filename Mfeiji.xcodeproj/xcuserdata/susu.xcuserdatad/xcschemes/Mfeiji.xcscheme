@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D2B646DB197A7CE30074F36B"
-               BuildableName = "Mfeiji.app"
+               BuildableName = "&#x9ea6;&#x98de;&#x673a;.app"
                BlueprintName = "Mfeiji"
                ReferencedContainer = "container:Mfeiji.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D2B646DB197A7CE30074F36B"
-            BuildableName = "Mfeiji.app"
+            BuildableName = "&#x9ea6;&#x98de;&#x673a;.app"
             BlueprintName = "Mfeiji"
             ReferencedContainer = "container:Mfeiji.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D2B646DB197A7CE30074F36B"
-            BuildableName = "Mfeiji.app"
+            BuildableName = "&#x9ea6;&#x98de;&#x673a;.app"
             BlueprintName = "Mfeiji"
             ReferencedContainer = "container:Mfeiji.xcodeproj">
          </BuildableReference>
@@ -80,7 +80,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D2B646DB197A7CE30074F36B"
-            BuildableName = "Mfeiji.app"
+            BuildableName = "&#x9ea6;&#x98de;&#x673a;.app"
             BlueprintName = "Mfeiji"
             ReferencedContainer = "container:Mfeiji.xcodeproj">
          </BuildableReference>

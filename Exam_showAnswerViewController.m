@@ -245,10 +245,10 @@
                 
             }
             NSLog(@"fram   %f",lable.frame.size.height+lable.frame.origin.y+20);
-            if ((lable.frame.size.height+lable.frame.origin.y+30)>410) {
+            
+            if ((lable.frame.size.height+lable.frame.origin.y+30)>(self.view.frame.size.height-109-64)) {
                 scrollView.contentSize = CGSizeMake(320, (lable.frame.size.height+lable.frame.origin.y+15));
                 
-                NSLog(@"...............");
                 
             }else
             {

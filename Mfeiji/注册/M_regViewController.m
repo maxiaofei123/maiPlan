@@ -34,6 +34,7 @@
 @end
 
 @implementation M_regViewController
+@synthesize tag;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -228,6 +229,8 @@
             NSLog(@"res =%@",responseObject);
             int error = [[responseObject objectForKey:@"error"] intValue];
             if (error == 1) {
+                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",UserName.text] forKey:@"username"];
+                
                 [[NSUserDefaults standardUserDefaults] setObject:UserName.text forKey:@"username"];
                 UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
                                                                     message:@"注册成功"

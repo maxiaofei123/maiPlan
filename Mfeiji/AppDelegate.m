@@ -33,7 +33,7 @@
 
     
     intoBt = [UIButton buttonWithType:UIButtonTypeRoundedRect];;
-    intoBt.frame = CGRectMake(105, self.window.frame.size.height-150, 125, 25);
+    intoBt.frame = CGRectMake(105, self.window.frame.size.height-110, 125, 25);
     intoBt.backgroundColor=[UIColor colorWithRed:41./255 green:49./255 blue:104./255 alpha:1.];
     [intoBt.layer setCornerRadius:8.0];
     [intoBt setTitle:@"进入体验" forState:UIControlStateNormal];
@@ -47,7 +47,8 @@
 
     
     [self.window makeKeyAndVisible];
-     [WXApi registerApp:@"wxe3e595aa048f61e5"];
+    [WXApi registerApp:@"wxe3e595aa048f61e5"];
+    
     return YES;
 }
 -(void)intoNext:(UIButton *)sender

@@ -11,8 +11,9 @@
 #import "Exam_testViewController.h"
 #import "Exam_checkViewController.h"
 #import "Exam_rankingListViewController.h"
+#import "M_regViewController.h"
 
-@interface Exam_resultViewController ()
+@interface Exam_resultViewController ()<UIActionSheetDelegate>
 {
     NSArray *lableArr;
     UINavigationBar * nav;
@@ -68,8 +69,14 @@
 
 -(void)drawView
 {
-    UILabel * userLable = [[UILabel alloc] initWithFrame:CGRectMake(50, 140, 50, 20)];
-    userLable.text = [NSString stringWithFormat:@"%@:",[[NSUserDefaults standardUserDefaults] objectForKey:@"username"]];
+    NSString * token =[[NSUserDefaults standardUserDefaults] objectForKey:@"username"];
+    
+    if (token ==nil ) {
+        token =@"";
+    }    
+
+    UILabel * userLable = [[UILabel alloc] initWithFrame:CGRectMake(50, 140, 200, 20)];
+    userLable.text = [NSString stringWithFormat:@"%@:",token];
     userLable.font = [UIFont systemFontOfSize:16];
     [self.view addSubview:userLable];
     
@@ -183,21 +190,25 @@
             _examView = [[M_examViewController alloc] init];
             [self.navigationController pushViewController:_examView animated:NO];
             
-          //  [self.navigationController popViewControllerAnimated:NO];
-            
         }
             break;
             
         case 2:
+        {
+            UIActionSheet *sheet = [[UIActionSheet alloc]initWithTitle:@"分享" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"分享到微信好友",@"分享到朋友圈", nil];
+            [sheet showInView:self.view];
+        }
         
             
             break;
         case 3:
-        {//查看答案
+        {//查看答案“
+            
             Exam_checkViewController *check = [[Exam_checkViewController alloc] init];
             check.wrDic =checkDic;
             check.zhuangtaiDic =zhuangtai;
             [self.navigationController pushViewController:check animated:YES];
+        
         }
             break;
         case 4:
@@ -213,8 +224,15 @@
             break;
     }
 
+}
 
-
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        [M_public sendLinkContent:0];
+    }else if (buttonIndex == 1){
+        [M_public sendLinkContent:1];
+    }
 }
 
 

@@ -12,6 +12,8 @@
 #import "ASIFormDataRequest.h"
 #import "UIImageView+WebCache.h"
 
+
+
 @interface M_selfViewController ()<UIScrollViewDelegate,UITextFieldDelegate>
 {
     NSArray *nameArr;
@@ -24,24 +26,33 @@
     NSMutableDictionary * tefileDic;
     
     UITextField *nameText;
-    UITextField *granderText;
     UITextField *phoneText;
     UITextField *schoolText;
+    UILabel *granderlable;
     
     
     UILabel * scoreLable;
+    NSString * scorestr;
     
     MBProgressHUD *mb;
     
     int will;
     ASIFormDataRequest *request;
- 
+
+//性别
+    UIButton *btnan;
+    UIButton * btNv;
+    UIView * viewSex;
+    int sexTag;
+    NSString * genderStr;
+    int reloadTag;
+
 }
 
 @end
 
 @implementation M_selfViewController
-@synthesize MtableView;
+@synthesize MtableView,granderStr;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -71,6 +82,10 @@
     view.backgroundColor =[UIColor colorWithPatternImage:[UIImage imageNamed:@"hui_bg.png"]];
     [self.view addSubview:view];
     textId =0;
+    sexTag =101;
+    reloadTag =0;
+    
+    
     nameArr = [[NSArray alloc] initWithObjects:@"昵称:",@"性别:",@"手机:",@"航校:", nil];
     textFileArr = [[NSMutableArray alloc] init];
     
@@ -79,7 +94,8 @@
     MtableView.delegate =self;
     MtableView.dataSource =self;
     MtableView.backgroundColor = [UIColor clearColor];
-    MtableView.scrollEnabled = NO;
+    MtableView.scrollEnabled = YES;
+    MtableView.showsVerticalScrollIndicator =NO;
     [self.view addSubview:MtableView];
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
         self.MtableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
@@ -101,10 +117,9 @@
 
     [self drawNav];
     [self requst];
-   
-    
-
+ 
 }
+
 -(void)setTextFile
 {
   if ([[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"] ==NULL) {
@@ -114,9 +129,9 @@
         NSLog(@"user user user");
         NSString * nameStr = [NSString stringWithFormat:@"%@",[tefileDic objectForKey:@"username"]];
         NSString * phoneStr =[NSString stringWithFormat:@"%@",[tefileDic objectForKey:@"phone"]];
-        NSString * genderStr =[NSString stringWithFormat:@"%@",[tefileDic objectForKey:@"gender"]];
+        genderStr =[NSString stringWithFormat:@"%@",[tefileDic objectForKey:@"gender"]];
         NSString * schoolStr =[NSString stringWithFormat:@"%@",[tefileDic objectForKey:@"school_name"]];
-        NSString * scorestr =[NSString stringWithFormat:@"%@",[tefileDic objectForKey:@"topscore"]];
+        scorestr =[NSString stringWithFormat:@"%@",[tefileDic objectForKey:@"topscore"]];
         
         
         NSLog(@"name =%@ phone =%@  grander =%@ school=%@ score=%@",nameStr,phoneStr,genderStr,schoolStr,schoolStr);
@@ -124,7 +139,7 @@
             nameText.text = nameStr;
         }
         if (!([genderStr isEqualToString:@"<null>"])) {
-            granderText.text = genderStr;
+            granderlable.text = genderStr;
         }
         if (!([phoneStr isEqualToString:@"<null>"])) {
             phoneText.text = phoneStr;
@@ -138,55 +153,64 @@
         
         }else{
             
-            scoreLable.text =[NSString stringWithFormat:@"%@  分",[tefileDic objectForKey:@"topscore"]];
+            scoreLable.text =[NSString stringWithFormat:@"%@  分",scorestr];
         }
     }
 }
 
 -(void)requst
 {
-    NSString *str =[[NSString alloc] initWithFormat:@"http://42.120.9.87:4010/api/users/profile?auth_token=%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"]];
-        
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager GET:str parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-           NSDictionary * dic=responseObject;
-            tefileDic = [NSMutableDictionary alloc];
-             tefileDic =[dic objectForKey:@"user"];
-            // 设置头像
-            NSString *imageUrl = [NSString stringWithFormat:@"%@",[[[tefileDic objectForKey:@"avatar"] objectForKey:@"thumb"] objectForKey:@"url"]];
-            [[NSUserDefaults standardUserDefaults] setObject:imageUrl forKey:@"imageUrl"];
+    NSString * auth = [[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"];
+    if (auth.length > 0) {
+        NSString *str =[[NSString alloc] initWithFormat:@"http://42.120.9.87:4010/api/users/profile?auth_token=%@",[[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"]];
             
-            if (imageUrl.length > 0) {
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+            [manager GET:str parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+               NSDictionary * dic=responseObject;
+                tefileDic = [NSMutableDictionary alloc];
+                 tefileDic =[dic objectForKey:@"user"];
+                // 设置头像
+                NSString *imageUrl = [NSString stringWithFormat:@"%@",[[[tefileDic objectForKey:@"avatar"] objectForKey:@"thumb"] objectForKey:@"url"]];
+                [[NSUserDefaults standardUserDefaults] setObject:imageUrl forKey:@"imageUrl"];
                 
-                [headView setImageWithURL:[NSURL URLWithString:imageUrl]];
-            }
-//            NSLog(@"imageurl = %@ ",imageUrl);
-            NSLog(@"myself =%@",tefileDic);
-            //显示个人信息
-            [self setTextFile];
-            
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                                message:@"获取信息失败，请检查网络"
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"确定"
-                                                      otherButtonTitles:nil];
-            [alertView show];
-            nameText.text = nil;
-            granderText.text =nil;
-            phoneText.text =nil;
-            schoolText.text = nil;
-        }];
+                if (imageUrl.length > 0) {
+                    
+                    [headView setImageWithURL:[NSURL URLWithString:imageUrl]];
+                }
+                NSLog(@"imageurl = %@ ",imageUrl);
+                
+                //一个cell刷新
+                reloadTag =1;
+                NSIndexPath *indexPath=[NSIndexPath indexPathForRow:1 inSection:1];
+                [MtableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];
+                //显示个人信息
+                [self setTextFile];
+                
+                
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                                    message:@"获取信息失败，请检查网络"
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"确定"
+                                                          otherButtonTitles:nil];
+                [alertView show];
+                nameText.text = nil;
+                phoneText.text =nil;
+                schoolText.text = nil;
+            }];
+    }else{
+    
+    }
 }
 
 -(void)commitUser
 {
+  
     if ([[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"] == NULL) {
         nameText.text = nil;
-        granderText.text =nil;
         phoneText.text =nil;
         schoolText.text = nil;
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
@@ -205,20 +229,33 @@
                                                       otherButtonTitles:nil];
             [alertView show];
         }else{
+            
            // asi 上传修改信息
             mb = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             mb.labelText = @"提交资料中...";
             NSString * userId = [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
-            
+            NSString *sex = [[NSString alloc] init];
+            if (sexTag == 0) {
+                sex =@"男";
+            }
+            else if(sexTag == 1)
+            {
+                sex =@"女";
+            }else
+            {
+                sex =genderStr;
+            }
+            NSLog(@"sex =%@",sex);
             NSString  * s =[NSString stringWithFormat:@"http://42.120.9.87:4010/api/users/%@?auth_token=%@",userId,[[NSUserDefaults standardUserDefaults]objectForKey:@"auth_token"]];
             NSLog(@"str =%@",s);
             NSURL *url = [NSURL URLWithString:[s stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
             request = [ASIFormDataRequest requestWithURL:url];
+            
             NSData *mData = UIImageJPEGRepresentation(headView.image, 1);
             
             [request  addData:mData  withFileName:@"avatarImage.png" andContentType:@"image/JPEG"  forKey:@"user[avatar]"];
             [request setPostValue:nameText.text forKey:@"user[username]"];
-            [request setPostValue:granderText.text forKey:@"user[gender]"];
+            [request setPostValue:sex forKey:@"user[gender]"];
             [request setPostValue:phoneText.text forKey:@"user[phone]"];
             [request setPostValue:schoolText.text forKey:@"user[school_name]"];
             [request setDelegate:self];
@@ -242,7 +279,7 @@
 //    [[SDImageCache sharedImageCache] removeImageForKey:key];
     [[SDImageCache sharedImageCache] cleanDisk];
     
-    NSLog(@"requstFinished=%@",jsonObject);
+//    NSLog(@"requstFinished=%@",jsonObject);
     
 }
 - (void)requestFailed:(ASIHTTPRequest *)r
@@ -256,7 +293,6 @@
 -(void)textFieldEditing
 {
     [nameText resignFirstResponder];
-    [granderText resignFirstResponder];
     [phoneText resignFirstResponder];
     [schoolText resignFirstResponder];
     
@@ -264,15 +300,16 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    if (textField == nameText) {
-        [MtableView setContentOffset:CGPointMake(0, 44) animated:YES];
-    }
-    if (textField == granderText) {
-        [MtableView setContentOffset:CGPointMake(0, 84) animated:YES];
-    }else if (textField == phoneText)
+   if (textField == phoneText)
+    {
         [MtableView setContentOffset:CGPointMake(0, 124) animated:YES];
+
+    }
     else if (textField ==schoolText)
+    {
         [MtableView setContentOffset:CGPointMake(0, 164) animated:YES];
+
+    }
     
 }
 
@@ -281,8 +318,7 @@
 {
     [textField resignFirstResponder];
     [MtableView setContentOffset:CGPointMake(0, 0) animated:YES];
-//     [headView setImageWithURL:[NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:@"imageUrl"]]];
-    
+
 }
 
 - (void)drawNav
@@ -305,6 +341,22 @@
     [view addSubview:title];
 }
 
+-(void)chooseSex:(UIButton *)sender
+{
+   if(sender.tag ==201)
+   {
+       [btnan setBackgroundImage:[UIImage imageNamed:@"choose.png"] forState:UIControlStateNormal];
+       [btNv setBackgroundImage:[UIImage imageNamed:@"yuan.png"] forState:UIControlStateNormal];
+       sexTag = 0;
+   }else if (sender.tag =202)
+   {
+       [btNv setBackgroundImage:[UIImage imageNamed:@"choose.png"] forState:UIControlStateNormal];
+       [btnan setBackgroundImage:[UIImage imageNamed:@"yuan.png"] forState:UIControlStateNormal];
+       sexTag = 1;
+   
+   }
+
+}
 
 #pragma mark -tableview
 
@@ -344,6 +396,7 @@
             [hImage addSubview:headView];
             UITapGestureRecognizer *pass = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(upLoad)];
             [headView addGestureRecognizer:pass];
+            
             if (linshiImage == nil) {
                 
                 [headView setImageWithURL:[NSURL URLWithString:[[NSUserDefaults standardUserDefaults] objectForKey:@"imageUrl"]]];
@@ -355,7 +408,7 @@
             
             UIButton *changeBt =[[UIButton alloc] init];
             changeBt =[UIButton buttonWithType:0];
-            [changeBt setImage:[UIImage imageNamed:@"my_xiugai.png"] forState:UIControlStateNormal];
+            [changeBt setImage:[UIImage imageNamed:@"my_xiugaitouxiang.png"] forState:UIControlStateNormal];
             [changeBt setFrame:CGRectMake(100, 22, 60, 15)];
             [changeBt addTarget:self action:@selector(upLoad) forControlEvents:UIControlEventTouchUpInside];
             [cell addSubview:changeBt];
@@ -367,7 +420,7 @@
             cell.textLabel.text =[nameArr objectAtIndex:row];
             
             if (indexPath.row ==0) {
-                nameText = [[UITextField alloc] initWithFrame:CGRectMake(65, 5, 200, 30)];
+                nameText = [[UITextField alloc] initWithFrame:CGRectMake(65, 5, 150, 30)];
                 nameText.textColor = [UIColor blackColor];
                 nameText.font =[UIFont systemFontOfSize:16];
                 nameText.tag = indexPath.row;
@@ -375,16 +428,63 @@
                 [cell addSubview:nameText];
             }else if(indexPath.row ==1)
             {
-                granderText = [[UITextField alloc] initWithFrame:CGRectMake(65, 5, 200, 30)];
-                granderText.textColor = [UIColor blackColor];
-                granderText.font =[UIFont systemFontOfSize:16];
-                granderText.tag = indexPath.row;
-                granderText.delegate =self;
-                [cell addSubview:granderText];
+                NSLog(@"reloadTag =%d",reloadTag);
+                if (reloadTag ==1) {
+                    
+                    NSString * sex = [NSString stringWithFormat:@"%@",[tefileDic objectForKey:@"gender"]];
+//                    NSLog(@"gender =%@",sex);
+//                     NSLog(@"sex,lenght =%d",sex.length);
+                    if (sex.length <1 || [sex isEqualToString:@"<null>"]) {
+                        
+                        viewSex = [[UIView alloc] initWithFrame:CGRectMake(60, 0.5, 160, 38)];
+                        viewSex.backgroundColor = [UIColor whiteColor];
+                        [cell addSubview:viewSex];
+                        
+                        btnan =[[UIButton alloc] initWithFrame:CGRectMake(50, 10, 20, 20)];
+                        [btnan setBackgroundImage:[UIImage imageNamed:@"yuan.png"] forState:UIControlStateNormal];
+                        btnan.tag = 201;
+                        [btnan addTarget:self action:@selector(chooseSex:) forControlEvents:UIControlEventTouchUpInside];
+                        [viewSex addSubview:btnan];
+                        
+                        btNv =[[UIButton alloc] initWithFrame:CGRectMake(140, 10, 20, 20)];
+                        [btNv setBackgroundImage:[UIImage imageNamed:@"yuan"] forState:UIControlStateNormal];
+                        btNv.tag =202;
+                        [btNv addTarget:self action:@selector(chooseSex:) forControlEvents:UIControlEventTouchUpInside];
+                        [viewSex addSubview:btNv];
+                        
+                        
+                        UIButton *nan = [[UIButton alloc] initWithFrame:CGRectMake(10, 5, 30, 30)];
+                        [nan setTitle:@"男" forState:UIControlStateNormal];
+                        [nan  setTitle:@"男" forState:UIControlStateSelected];
+                        [nan setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                        [nan setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
+                        [viewSex addSubview:nan];
+                        
+                        UIButton *nv = [[UIButton alloc] initWithFrame:CGRectMake(100, 5, 30, 30)];
+                        [nv setTitle:@"女" forState:UIControlStateNormal];
+                        [nv setTitle:@"女" forState:UIControlStateSelected];
+                        [nv setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                        [nv setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
+                        [viewSex addSubview:nv];
+
+                    }else
+                    {
+                        [viewSex removeFromSuperview];
+                        granderlable = [[UILabel alloc] initWithFrame:CGRectMake(70, 5, 30, 30)];
+                        granderlable.textColor = [UIColor blackColor];
+                        granderlable.text = genderStr;
+                        granderlable.font = [UIFont systemFontOfSize:18];
+                        [cell addSubview:granderlable];
+                    }
+                    
+                    reloadTag == 0;
+                    
+                }
+                
             }
             else if(indexPath.row ==2)
             {
-                phoneText = [[UITextField alloc] initWithFrame:CGRectMake(65, 5, 200, 30)];
+                phoneText = [[UITextField alloc] initWithFrame:CGRectMake(65, 5, 150, 30)];
                 phoneText.textColor = [UIColor blackColor];
                 phoneText.font =[UIFont systemFontOfSize:16];
                 phoneText.keyboardType = UIKeyboardTypeNumberPad;
@@ -394,7 +494,7 @@
             }
             else if(indexPath.row ==3)
             {
-                schoolText = [[UITextField alloc] initWithFrame:CGRectMake(65, 5, 200, 30)];
+                schoolText = [[UITextField alloc] initWithFrame:CGRectMake(65, 5, 150, 30)];
                 schoolText.textColor = [UIColor blackColor];
                 schoolText.font =[UIFont systemFontOfSize:16];
                 schoolText.tag = indexPath.row;
@@ -402,7 +502,6 @@
                 [cell addSubview:schoolText];
             }
 
-            
         }
             break;
         case 2:
@@ -411,6 +510,14 @@
             cell.textLabel.font = [UIFont systemFontOfSize:16];
             scoreLable = [[UILabel  alloc] initWithFrame:CGRectMake(110, 16, 200, 30)];
             scoreLable.textColor =[UIColor redColor];
+            if([scorestr isEqualToString:@"<null>"] || scorestr.length ==0)
+            {
+                
+            }else{
+                
+                scoreLable.text =[NSString stringWithFormat:@"%@  分",scorestr];
+            }
+
             scoreLable.font = [UIFont systemFontOfSize:16];
             [cell addSubview:scoreLable];
         }
@@ -424,11 +531,11 @@
     return cell;
     
 }
-    
+
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

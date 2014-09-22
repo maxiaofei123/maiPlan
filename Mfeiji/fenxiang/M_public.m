@@ -17,7 +17,7 @@
     if ([WXApi isWXAppInstalled] && [WXApi isWXAppSupportApi]) {
         WXMediaMessage *message = [WXMediaMessage message];
         message.title = @"助力中国和人飞行，成就国人放飞梦想.";
-        message.description = @"助力中国和人飞行，成就国人放飞梦想。";
+        message.description = @"分享下载";
         [message setThumbImage:[UIImage imageNamed:@"120-120.png"]];
         
         WXWebpageObject *ext = [WXWebpageObject object];
@@ -45,11 +45,11 @@
 {
     if (alertView.tag == 100){
         if (buttonIndex == 1) {
+            NSLog(@"wei xin ");
             NSString *weiXinLink = @"itms-apps://itunes.apple.com/cn/app/wei-xin/id414478124?mt=8";
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:weiXinLink]];
         }
-    }
-}
+    }}
 
 
 

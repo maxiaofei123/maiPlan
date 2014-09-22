@@ -10,4 +10,6 @@
 
 @interface M_regViewController : UIViewController<UITextFieldDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate>
 
+@property (nonatomic)int tag;
+
 @end

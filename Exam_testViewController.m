@@ -273,7 +273,7 @@
                 
             }
 //            NSLog(@"lable fram=%f",lableH+30);
-            if ((lableH+30)>410) {
+            if ((lableH+30)>self.view.frame.size.height-109-64) {
                 scrollView.contentSize = CGSizeMake(320, (lable.frame.size.height+lable.frame.origin.y+15));
                 
                 
@@ -282,7 +282,6 @@
                 scrollView.contentSize =CGSizeMake(320,self.view.frame.size.height -109-64);
             }
             //设置button的 fram
-            
             UIButton *cBt = [buttonArr objectAtIndex:i];
             cBt.frame = CGRectMake(40, lable.frame.origin.y-3, 25, 25);
             
@@ -339,6 +338,7 @@
         case 7:
         {
             //跳转未做序号页面
+            NSLog(@"已答题 =%@ ",yidaArr);
             weidaArr = [[NSMutableArray alloc] init];
             for (int  i= 0; i<80; i++) {
                 int p =0;
@@ -346,6 +346,7 @@
                     NSString *str =[[NSString alloc]initWithFormat:@"%@",[yidaArr objectAtIndex:j]];
                     if ([str isEqualToString:[NSString stringWithFormat:@"%d",i]]) {
                         p=1;
+                        break;
                     }
                 }
                 if (p == 0) {
@@ -353,7 +354,7 @@
                 }
                 
             }
-            //                NSLog(@"weida  =%@",weidaArr);
+//            NSLog(@"weida  =%@",weidaArr);
             Exam_weiZuoViewController * weizuo = [[Exam_weiZuoViewController alloc] init];
             weizuo.weidaArry = weidaArr;
             weizuo.delegate =self;
@@ -385,7 +386,7 @@
             
             valueStr =[zhuangTaiDic objectForKey:[NSString stringWithFormat:@"%d",textId]];
             int tag = [valueStr  intValue];
-            //            NSLog(@"ca,,,,,,,,,,,%d",valueStr.length);
+
             if (!(valueStr.length ==0)) {
                 for (int i=0; i<3; i++) {
                     UIButton * bt = [buttonArr objectAtIndex:i];
@@ -426,12 +427,35 @@
             if (i==sender.tag) {
                 bt.selected = YES;
                 [zhuangTaiDic setObject:[NSString stringWithFormat:@"%d",i-3] forKey:[NSString stringWithFormat:@"%d",textId]];
-                [yidaArr addObject:[NSString stringWithFormat:@"%d",textId]];
-            }
-            else
+              
+                
+                
+                if (yidaArr.count == 0) {
+                     [yidaArr addObject:[NSString stringWithFormat:@"%d",textId]];
+                }else{
+                    
+                    int con =0;
+                    for (int i=0; i<yidaArr.count; i++) {
+                        NSString * yida = [yidaArr objectAtIndex:i];
+                        NSString *test = [NSString stringWithFormat:@"%d",textId];
+
+                        if ([yida isEqualToString:test]) {
+                            con =1;
+                            break;
+                        }
+                    }
+                    
+                    if (con ==0 ) {
+                        
+                        NSLog(@"不相等");
+                        [yidaArr addObject:[NSString stringWithFormat:@"%d",textId]];
+                    }
+                }
+            }else
             {
-                bt.selected = NO;
+                    bt.selected = NO;
             }
+        
         }
     }
     
@@ -494,8 +518,7 @@
         
     }
     checkDic = [[NSDictionary alloc] initWithObjectsAndKeys:wrongArr,@"wrongArr", daduiArr,@"weidaArr" ,textName,@"textName",correctArr,@"answer",nil, nil];
-    
-//    NSLog(@"score =%f ，useTime=%@",score,timeLbale.text);
+
     [timer invalidate];
     timer = nil;
     resultView =[[Exam_resultViewController alloc] init];
@@ -672,14 +695,23 @@
     topView.image = [UIImage imageNamed:@"test_lan.png"];
     [self.view addSubview:topView];
     //---------lable---
+    NSString * Id =[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"];
+    NSString * token =[[NSUserDefaults standardUserDefaults] objectForKey:@"username"];
+    
+    if (Id ==nil) {
+        Id =@"";
+    }
+    if (token ==nil ) {
+        token =@"";
+    }
     UILabel *userNO = [[UILabel alloc] initWithFrame:CGRectMake(30, 9, 120,  20)];
-    userNO.text = [NSString stringWithFormat:@"学生序号: %@",[[NSUserDefaults standardUserDefaults] objectForKey:@"userId"]];
+    userNO.text = [NSString stringWithFormat:@"学生序号: %@",Id];
     userNO.textColor = [UIColor whiteColor];
     userNO.font = [UIFont systemFontOfSize:16];
     [topView addSubview:userNO];
     
     UILabel *userLable = [[UILabel alloc] initWithFrame:CGRectMake(170, 9, 150,  20)];
-    userLable.text = [NSString stringWithFormat:@"学生姓名: %@",[[NSUserDefaults standardUserDefaults] objectForKey:@"username"]];
+    userLable.text = [NSString stringWithFormat:@"学生姓名: %@",token];
     userLable.textColor = [UIColor whiteColor];
     userLable.font = [UIFont systemFontOfSize:16];
     

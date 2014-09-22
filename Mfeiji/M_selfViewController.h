@@ -8,7 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface M_selfViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIActionSheetDelegate>
+{
+  
+
+}
 
 @property (strong ,nonatomic)UITableView * MtableView;
+@property (strong ,nonatomic)NSString * granderStr;
+
 @end

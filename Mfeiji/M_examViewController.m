@@ -52,11 +52,9 @@ static NSDictionary * dic;
     [self.view addSubview:view];
     lableArr = [[NSArray alloc] initWithObjects:@"全面学习模式", @"未答过题模式",@"复习错题模式",nil];
     
-   
     
     [self drawNav];
     [self drawView];
-    
     
 }
 
